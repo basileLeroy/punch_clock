@@ -26,8 +26,13 @@ if (has_capability('mod/punchclock:manage', $context)) {
     echo "<h3>Teacher View</h3>";
     echo "<p>This is the teacher-specific content.</p>";
 } else {
+
+    $templatecontext = (object)[
+        'content' => 'something'
+    ];
+
     echo "<h3>Student View</h3>";
-    echo "<p>This is the student-specific content.</p>";
+    echo $OUTPUT->render_from_template('mod_punchclock/view', $templatecontext);
 }
 
 echo $OUTPUT->footer();
