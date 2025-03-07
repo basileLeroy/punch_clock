@@ -1,46 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<XMLDB PATH="mod/punchclock/db" VERSION="2025030700" COMMENT="Moodle Punch Clock Database Schema">
+<XMLDB PATH="mod/punch_clock/db" VERSION="2025030700" COMMENT="Moodle Punch Clock Database Schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
 
     <TABLES>
         <!-- Punch Clock Table -->
-        <TABLE NAME="mdl_punch_clock" COMMENT="Stores punch clock instances for courses">
+        <TABLE NAME="punch_clock" COMMENT="Stores punch clock instances for courses">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="start_date" TYPE="bigint" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="end_date" TYPE="bigint" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="start_date" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="end_date" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="course_fk" TYPE="foreign" FIELDS="course_id" REFTABLE="mdl_course"
-                    REFFIELDS="id" ONDELETE="cascade" />
             </KEYS>
         </TABLE>
 
         <!-- Punch Clock Exceptions -->
-        <TABLE NAME="mdl_punch_clock_exceptions"
+        <TABLE NAME="punch_clock_exceptions"
             COMMENT="Stores exceptions for punch clock instances">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="start_date" TYPE="bigint" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="end_date" TYPE="bigint" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="reason" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="start_date" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="end_date" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="reason" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="course_fk" TYPE="foreign" FIELDS="course_id" REFTABLE="mdl_punch_clock"
-                    REFFIELDS="id" ONDELETE="cascade" />
             </KEYS>
         </TABLE>
 
         <!-- Punch Clock Statuses -->
-        <TABLE NAME="mdl_punch_clock_statuses" COMMENT="Stores possible attendance statuses">
+        <TABLE NAME="punch_clock_statuses" COMMENT="Stores possible attendance statuses">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="status" TYPE="varchar" LENGTH="50" NOTNULL="true" UNIQUE="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -48,45 +45,35 @@
         </TABLE>
 
         <!-- Punch Clock Sessions -->
-        <TABLE NAME="mdl_punch_clock_sessions" COMMENT="Tracks user clock-in and clock-out sessions">
+        <TABLE NAME="punch_clock_sessions" COMMENT="Tracks user clock-in and clock-out sessions">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="course_instance_id" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="checkin_a" TYPE="bigint" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="checkout_a" TYPE="bigint" LENGTH="10" NULL="true" />
-                <FIELD NAME="checkin_b" TYPE="bigint" LENGTH="10" NULL="true" />
-                <FIELD NAME="checkout_b" TYPE="bigint" LENGTH="10" NULL="true" />
-                <FIELD NAME="status_id" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="course_instance_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="checkin_a" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="checkout_a" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+                <FIELD NAME="checkin_b" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+                <FIELD NAME="checkout_b" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+                <FIELD NAME="status_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="user_fk" TYPE="foreign" FIELDS="user_id" REFTABLE="mdl_user"
-                    REFFIELDS="id" ONDELETE="cascade" />
-                <KEY NAME="course_fk" TYPE="foreign" FIELDS="course_instance_id"
-                    REFTABLE="mdl_punch_clock" REFFIELDS="id" ONDELETE="cascade" />
-                <KEY NAME="status_fk" TYPE="foreign" FIELDS="status_id"
-                    REFTABLE="mdl_punch_clock_statuses" REFFIELDS="id" />
             </KEYS>
         </TABLE>
 
         <!-- Punch Clock Logs -->
-        <TABLE NAME="mdl_punch_clock_logs"
+        <TABLE NAME="punch_clock_logs"
             COMMENT="Stores logs of user actions in punch clock sessions">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="session_id" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="timestamp" TYPE="bigint" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="message" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="session_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="timestamp" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="message" TYPE="text" NOTNULL="true" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="user_fk" TYPE="foreign" FIELDS="user_id" REFTABLE="mdl_user"
-                    REFFIELDS="id" ONDELETE="cascade" />
-                <KEY NAME="session_fk" TYPE="foreign" FIELDS="session_id"
-                    REFTABLE="mdl_punch_clock_sessions" REFFIELDS="id" ONDELETE="cascade" />
             </KEYS>
         </TABLE>
     </TABLES>
