@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<XMLDB PATH="mod/punch_clock/db" VERSION="2025030700" COMMENT="Moodle Punch Clock Database Schema"
+<XMLDB PATH="mod/punchclock/db" VERSION="2025030700" COMMENT="Moodle Punch Clock Database Schema"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
 
     <TABLES>
         <!-- Punch Clock Table -->
-        <TABLE NAME="punch_clock" COMMENT="Stores punch clock instances for courses">
+        <TABLE NAME="punchclock" COMMENT="Stores punch clock instances for courses">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
@@ -19,7 +19,7 @@
         </TABLE>
 
         <!-- Punch Clock Exceptions -->
-        <TABLE NAME="punch_clock_exceptions"
+        <TABLE NAME="punchclock_exceptions"
             COMMENT="Stores exceptions for punch clock instances">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -35,7 +35,7 @@
         </TABLE>
 
         <!-- Punch Clock Statuses -->
-        <TABLE NAME="punch_clock_statuses" COMMENT="Stores possible attendance statuses">
+        <TABLE NAME="punchclock_statuses" COMMENT="Stores possible attendance statuses">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
             </FIELDS>
@@ -45,7 +45,7 @@
         </TABLE>
 
         <!-- Punch Clock Sessions -->
-        <TABLE NAME="punch_clock_sessions" COMMENT="Tracks user clock-in and clock-out sessions">
+        <TABLE NAME="punchclock_sessions" COMMENT="Tracks user clock-in and clock-out sessions">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
@@ -63,7 +63,7 @@
         </TABLE>
 
         <!-- Punch Clock Logs -->
-        <TABLE NAME="punch_clock_logs"
+        <TABLE NAME="punchclock_logs"
             COMMENT="Stores logs of user actions in punch clock sessions">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
