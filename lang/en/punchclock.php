@@ -11,4 +11,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['modulename'] = 'Punch Clock';
+$string['modulenameplural'] = 'Punch Clocks';
+$string['activityname'] = 'Punch Clock';
+$string['pluginname'] = 'Punch Clock';
+$string['getactivityname'] = 'Your activity name';
+$string['getcoursestartdate'] = "Select course start date";
+$string['getcourseenddate'] = "Select course end date";
 $string[''] = '';
