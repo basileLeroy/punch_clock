@@ -36,16 +36,18 @@ function punchclock_add_instance($data, $mform = null)
  * @param int $id The ID of the activity instance being deleted.
  * @return bool True if successful, false otherwise.
  */
-function punchclock_delete_instance($id)
-{
-    dd("Triggered");
+function punchclock_delete_instance($id) {
     global $DB;
 
+    // Check if the instance exists
     if (!$record = $DB->get_record('punchclock', ['id' => $id])) {
-        return false;
+        return false; // If the instance is not found, return false
     }
 
-    // Delete the record from the punchclock table
+    // Delete associated records (if any) before removing the main instance
+    $DB->delete_records('punchclock_entries', ['punchclockid' => $id]); // Example if you have related data
+
+    // Delete the main instance record
     $DB->delete_records('punchclock', ['id' => $id]);
 
     return true;
