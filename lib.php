@@ -18,13 +18,40 @@
 function punchclock_add_instance($data, $mform = null)
 {
     global $DB;
+    echo '<pre>';
+    var_dump($data);
+    echo '</pre>';
+    die();
 
+    // Convert session days array to a comma-separated string
+    $days = !empty($data->sessiondays) ? implode(',', array_keys($data->sessiondays)) : '';
+
+    // Create the record object
     $record = new stdClass();
     $record->course_id = $data->course;
-    $record->name = $data->name;  // Ensure name is saved
+    $record->name = $data->name;
     $record->start_date = $data->start_date;
     $record->end_date = $data->end_date;
     $record->created_at = time();
+    $record->days = $days;
+    $record->early_access = isset($data->opensessionearly) ? $data->opensessionearly : 0;
+    $record->number_of_blocks = isset($data->addsessionblocks) ? (int)$data->addsessionblocks : 0;
+
+    // Handle time values, ensuring format is consistent
+    $record->block1_start = sprintf('%02d:%02d:00', $data->starthour1 ?? 0, $data->startminute1 ?? 0);
+    $record->block1_stop = sprintf('%02d:%02d:00', $data->endhour1 ?? 0, $data->endminute1 ?? 0);
+
+    if (!empty($data->starthour2) && !empty($data->startminute2)) {
+        $record->block2_start = sprintf('%02d:%02d:00', $data->starthour2, $data->startminute2);
+    } else {
+        $record->block2_start = '00:00:00';
+    }
+
+    if (!empty($data->endhour2) && !empty($data->endminute2)) {
+        $record->block2_stop = sprintf('%02d:%02d:00', $data->endhour2, $data->endminute2);
+    } else {
+        $record->block2_stop = '00:00:00';
+    }
 
     return $DB->insert_record('punchclock', $record);
 }
