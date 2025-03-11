@@ -18,15 +18,9 @@
 function punchclock_add_instance($data, $mform = null)
 {
     global $DB;
-    echo '<pre>';
-    var_dump($data);
-    echo '</pre>';
-    die();
 
-    // Convert session days array to a comma-separated string
     $days = !empty($data->sessiondays) ? implode(',', array_keys($data->sessiondays)) : '';
 
-    // Create the record object
     $record = new stdClass();
     $record->course_id = $data->course;
     $record->name = $data->name;
@@ -37,7 +31,6 @@ function punchclock_add_instance($data, $mform = null)
     $record->early_access = isset($data->opensessionearly) ? $data->opensessionearly : 0;
     $record->number_of_blocks = isset($data->addsessionblocks) ? (int)$data->addsessionblocks : 0;
 
-    // Handle time values, ensuring format is consistent
     $record->block1_start = sprintf('%02d:%02d:00', $data->starthour1 ?? 0, $data->startminute1 ?? 0);
     $record->block1_stop = sprintf('%02d:%02d:00', $data->endhour1 ?? 0, $data->endminute1 ?? 0);
 
@@ -57,7 +50,6 @@ function punchclock_add_instance($data, $mform = null)
 }
 
 /**
- * NOT WORKING YET
  * Deletes an instance of the punchclock module.
  *
  * @param int $id The ID of the activity instance being deleted.
