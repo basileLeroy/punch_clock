@@ -28,4 +28,10 @@ $string['block1time'] = 'Set first time block';
 $string['block2time'] = 'Set second time block';
 $string['starttime'] = 'Start Time:';
 $string['endtime'] = 'End Time:';
+$string['exceptions'] = 'Holidays / Time off';
+$string['addexception'] = 'Add new Holiday';
+$string['description'] = 'Description';
+$string['from'] = 'From';
+$string['to'] = 'To';
+
 $string[''] = '';
