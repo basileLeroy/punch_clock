@@ -30,6 +30,7 @@ $string['starttime'] = 'Start Time:';
 $string['endtime'] = 'End Time:';
 $string['exceptions'] = 'Holidays / Time off';
 $string['addexception'] = 'Add new Holiday';
+$string['removeexception'] = 'Remove block';
 $string['description'] = 'Description';
 $string['from'] = 'From';
 $string['to'] = 'To';
