@@ -26,8 +26,8 @@ class mod_punchclock_mod_form extends moodleform_mod
         // Configurations to set up the sessions
         $mform = $this->create_config_fields($mform);
 
-        // Add exception dates to exclude from the sessions
-        $mform = $this->create_exception_fields($mform);
+        // Add holiday dates to exclude from the sessions
+        $mform = $this->create_holiday_fields($mform);
 
         // Standard course module elements
         $this->standard_coursemodule_elements();
@@ -143,19 +143,19 @@ class mod_punchclock_mod_form extends moodleform_mod
         return $mform;
     }
 
-    private function create_exception_fields ($mform) {
-        $mform->addElement('header', 'exceptionsection', get_string('exceptions', 'mod_punchclock'));
-        $mform->setExpanded('exceptionsection');
+    private function create_holiday_fields ($mform) {
+        $mform->addElement('header', 'holidaysection', get_string('holidays', 'mod_punchclock'));
+        $mform->setExpanded('holidaysection');
         
-        $exceptionfields = [];
+        $holidayfields = [];
         
-        $exceptionfields[] = $mform->createElement('text', 'description', get_string('description', 'mod_punchclock'));
+        $holidayfields[] = $mform->createElement('text', 'description', get_string('description', 'mod_punchclock'));
         $mform->setType('description', PARAM_TEXT);
-        $exceptionfields[] = $mform->createElement('date_selector', 'startdate', get_string('from', 'mod_punchclock'));
-        $exceptionfields[] = $mform->createElement('date_selector', 'enddate', get_string('to', 'mod_punchclock'));
+        $holidayfields[] = $mform->createElement('date_selector', 'startdate', get_string('from', 'mod_punchclock'));
+        $holidayfields[] = $mform->createElement('date_selector', 'enddate', get_string('to', 'mod_punchclock'));
 
-        $exceptionfields[] = $mform->createElement('html', '
-            <div class="exception-divider my-4 mx-auto w-75">
+        $holidayfields[] = $mform->createElement('html', '
+            <div class="holiday-divider my-4 mx-auto w-75">
                 <hr class="my-3">
             </div>
         ');
@@ -171,13 +171,13 @@ class mod_punchclock_mod_form extends moodleform_mod
         $repeateloptions['enddate']['type'] = PARAM_INT;
 
         $this->repeat_elements(
-            $exceptionfields, 
+            $holidayfields, 
             $repeatno, 
             $repeateloptions, 
-            'exception_repeats', 
-            'exception_add_fields', 
+            'holiday_repeats', 
+            'holiday_add_fields', 
             1, 
-            get_string('addexception', 'mod_punchclock'),
+            get_string('addholiday', 'mod_punchclock'),
             true
         );
         
@@ -188,7 +188,7 @@ class mod_punchclock_mod_form extends moodleform_mod
                     <button type="button" id="add-holiday-button" class="btn add-content d-flex justify-content-center align-items-center p-1 icon-no-margin" >
                         <div class="px-1">
                             <i class="icon fa fa-plus fa-fw " aria-hidden="true"></i>
-                            <span class="activity-add-text pr-1">' . get_string('addexception', 'mod_punchclock') . '</span>
+                            <span class="activity-add-text pr-1">' . get_string('addholiday', 'mod_punchclock') . '</span>
                         </div>
                     </button>
                 </div>

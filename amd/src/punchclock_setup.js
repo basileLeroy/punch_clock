@@ -44,19 +44,19 @@ define([], function() {
         init: function() {
             let addTimeBlockDefaultButton = document.getElementById("id_timeblock_add_fields");
             let addTimeBlockCustomButton = document.getElementById("add-timeblock-button");
-            let addExceptionDefaultButton = document.getElementById("id_exception_add_fields");
-            let addExceptionCustomButton = document.getElementById("add-holiday-button");
+            let addHolidayDefaultButton = document.getElementById("id_holiday_add_fields");
+            let addHolidayCustomButton = document.getElementById("add-holiday-button");
 
-            removeDefaultButtons([addExceptionDefaultButton, addTimeBlockDefaultButton]);
+            removeDefaultButtons([addHolidayDefaultButton, addTimeBlockDefaultButton]);
 
             redirectCustomButtonToDefaultAction(addTimeBlockCustomButton, addTimeBlockDefaultButton);
-            redirectCustomButtonToDefaultAction(addExceptionCustomButton, addExceptionDefaultButton);
+            redirectCustomButtonToDefaultAction(addHolidayCustomButton, addHolidayDefaultButton);
 
             const timeblockCounter = document.querySelector('[name="timeblock_repeats"]');
-            const exceptionsCounter = document.querySelector('[name="exception_repeats"]');
+            const holidaysCounter = document.querySelector('[name="holiday_repeats"]');
 
             updateButtonVisibility(addTimeBlockCustomButton, timeblockCounter, 2);
-            updateButtonVisibility(addExceptionCustomButton, exceptionsCounter, 4);
+            updateButtonVisibility(addHolidayCustomButton, holidaysCounter, 4);
         }
     };
 });
