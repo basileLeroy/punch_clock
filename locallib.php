@@ -65,25 +65,25 @@ function insert_punchclock_holidays($data, $instance_id) {
     $today = strtotime('today');
 
     foreach ($data->description as $index => $description) {
-
         $description = trim($description);
         $reason = empty($description) ? null : $description;
-
-        // Validate startdate: if today or past, set startdate & enddate to null
+    
         $startdate = isset($data->startdate[$index]) ? (int)$data->startdate[$index] : null;
         $enddate = isset($data->enddate[$index]) ? (int)$data->enddate[$index] : null;
-
-        if (empty($startdate) || $startdate < $today) {
-            $startdate = $enddate = null;
+        $today = strtotime('today'); // Midnight today
+    
+        // Skip inserting if startdate or enddate is before today
+        if ($startdate < $today || $enddate < $today) {
+            continue;
         }
-
+    
         $record = new stdClass();
         $record->punchclock_id = $instance_id;
+        $record->start_date = $startdate;
+        $record->end_date = $enddate;
         $record->reason = $reason;
-        $record->startdate = $startdate;
-        $record->enddate = $enddate;
         $record->created_at = time();
-
+    
         // Insert record into DB
         $DB->insert_record('punchclock_holidays', $record, false);
     }
