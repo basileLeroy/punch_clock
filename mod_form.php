@@ -89,37 +89,56 @@ class mod_punchclock_mod_form extends moodleform_mod
 
         $mform->addElement('duration', 'opensessionearly', get_string('opensessionearly', 'mod_punchclock'));
 
-        $options = array(
-            '1' => '1',
-            '2' => '2'
-        );
-
-        $dropdown = $mform->createElement('select', 'addsessionblocks', '', $options);
-        $staticText = $mform->createElement('static', 'addsessionblocks_label', '', ' block(s)');
-
-        $mform->addGroup(array($dropdown, $staticText), 'dropdown_group', get_string('addsessionblocks', 'mod_punchclock'), ' ', false);
-
 
         $hours = array_combine(range(0, 23), array_map(fn($h) => sprintf('%02d', $h), range(0, 23)));
         $minutes = array_combine(range(0, 59), array_map(fn($m) => sprintf('%02d', $m), range(0, 59)));
 
+        // Define a single time block group
+        $timeblockfields = [];
 
-        // BLOCK 1 TIME SELECTION
-        $startHour = $mform->createElement('select', 'starthour', '', $hours);
-        $startMinute = $mform->createElement('select', 'startminute', '', $minutes);
-        $startLabel = $mform->createElement('static', 'startlabel', '', ' From: ');
+        $timeblock = [];
+        $timeblock[] = $mform->createElement('static', 'startlabel', '', ' From: ');
+        $timeblock[] = $mform->createElement('select', 'starthour', '', $hours);
+        $timeblock[] = $mform->createElement('select', 'startminute', '', $minutes);
 
-        $endHour = $mform->createElement('select', 'endhour', '', $hours);
-        $endMinute = $mform->createElement('select', 'endminute', '', $minutes);
-        $endLabel = $mform->createElement('static', 'endlabel', '', ' - To: ');
+        $timeblock[] = $mform->createElement('static', 'endlabel', '', ' - To: ');
+        $timeblock[] = $mform->createElement('select', 'endhour', '', $hours);
+        $timeblock[] = $mform->createElement('select', 'endminute', '', $minutes);
 
-        $mform->addGroup(
-            array($startLabel, $startHour, $startMinute, $endLabel, $endHour, $endMinute),
-            'timeblock',
-            get_string('timeblock', 'mod_punchclock'),
-            ' ',
-            false
+        // Group time selectors into one row
+        $timeblockfields[] = $mform->createElement('group', 'timeblock', get_string('timeblock', 'mod_punchclock'), $timeblock, ' ', false);
+
+        // Define repeatable elements
+        $repeatno = 1; // Initial number of time blocks
+        $repeateloptions = []; // Extra options
+
+        $this->repeat_elements(
+            $timeblockfields,
+            $repeatno,
+            $repeateloptions,
+            'timeblock_repeats',
+            'timeblock_add_fields',
+            1,
+            get_string('addtimeblock', 'mod_punchclock'),
+            true
         );
+
+        $mform->addElement('html', '
+            <div class="divider bulk-hidden d-flex justify-content-center align-items-center always-visible my-3">
+                <hr>
+                <div class="divider-content px-3">
+                    <button type="button" id="add-timeblock-button" class="btn add-content d-flex justify-content-center align-items-center p-1 icon-no-margin" >
+                        <div class="px-1">
+                            <i class="icon fa fa-plus fa-fw " aria-hidden="true"></i>
+                            <span class="activity-add-text pr-1">' . get_string('addtimeblock', 'mod_punchclock') . '</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        ');
+
+        $mform->addElement('hidden', 'timeblock_count', 1); // Start with 1 block
+        $mform->setType('timeblock_count', PARAM_INT);
 
         return $mform;
     }
@@ -134,14 +153,6 @@ class mod_punchclock_mod_form extends moodleform_mod
         $mform->setType('description', PARAM_TEXT);
         $exceptionfields[] = $mform->createElement('date_selector', 'startdate', get_string('from', 'mod_punchclock'));
         $exceptionfields[] = $mform->createElement('date_selector', 'enddate', get_string('to', 'mod_punchclock'));
-
-        $exceptionfields[] = $mform->createElement('html', '
-            <div id="remove-exceptions-block" class="d-flex justify-content-center">
-                <button id="remove-exception-button" type="button" class="btn btn-danger remove-exception px-6">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </div>
-        ');
 
         $exceptionfields[] = $mform->createElement('html', '
             <div class="exception-divider my-4 mx-auto w-75">
