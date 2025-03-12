@@ -109,6 +109,14 @@ class mod_punchclock_mod_form extends moodleform_mod
         $exceptionfields[] = $mform->createElement('date_selector', 'enddate', get_string('to', 'mod_punchclock'));
 
         $exceptionfields[] = $mform->createElement('html', '
+            <div id="remove-exceptions-block" class="d-flex justify-content-center">
+                <button id="remove-exception-button" type="button" class="btn btn-danger remove-exception px-6">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+        ');
+
+        $exceptionfields[] = $mform->createElement('html', '
             <div class="exception-divider my-4 mx-auto w-75">
                 <hr class="my-3">
             </div>
@@ -132,7 +140,8 @@ class mod_punchclock_mod_form extends moodleform_mod
             'exception_repeats', 
             'exception_add_fields', 
             1, 
-            get_string('addexception', 'mod_punchclock')
+            get_string('addexception', 'mod_punchclock'),
+            true
         );
         
         // // Add validation rules after repeat_elements() (for each instance)
