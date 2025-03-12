@@ -47,16 +47,16 @@ class mod_punchclock_mod_form extends moodleform_mod
 
         $sessiondays = array();
         if ($CFG->calendar_startwday === '0') { // Week start from sunday.
-            $sessiondays[] =& $mform->createElement('checkbox', 'Sun', '', get_string('sunday', 'calendar'));
+            $sessiondays[] = &$mform->createElement('checkbox', 'Sun', '', get_string('sunday', 'calendar'));
         }
-        $sessiondays[] =& $mform->createElement('checkbox', 'Mon', '', get_string('monday', 'calendar'));
-        $sessiondays[] =& $mform->createElement('checkbox', 'Tue', '', get_string('tuesday', 'calendar'));
-        $sessiondays[] =& $mform->createElement('checkbox', 'Wed', '', get_string('wednesday', 'calendar'));
-        $sessiondays[] =& $mform->createElement('checkbox', 'Thu', '', get_string('thursday', 'calendar'));
-        $sessiondays[] =& $mform->createElement('checkbox', 'Fri', '', get_string('friday', 'calendar'));
-        $sessiondays[] =& $mform->createElement('checkbox', 'Sat', '', get_string('saturday', 'calendar'));
+        $sessiondays[] = &$mform->createElement('checkbox', 'Mon', '', get_string('monday', 'calendar'));
+        $sessiondays[] = &$mform->createElement('checkbox', 'Tue', '', get_string('tuesday', 'calendar'));
+        $sessiondays[] = &$mform->createElement('checkbox', 'Wed', '', get_string('wednesday', 'calendar'));
+        $sessiondays[] = &$mform->createElement('checkbox', 'Thu', '', get_string('thursday', 'calendar'));
+        $sessiondays[] = &$mform->createElement('checkbox', 'Fri', '', get_string('friday', 'calendar'));
+        $sessiondays[] = &$mform->createElement('checkbox', 'Sat', '', get_string('saturday', 'calendar'));
         if ($CFG->calendar_startwday !== '0') { // Week start from sunday.
-            $sessiondays[] =& $mform->createElement('checkbox', 'Sun', '', get_string('sunday', 'calendar'));
+            $sessiondays[] = &$mform->createElement('checkbox', 'Sun', '', get_string('sunday', 'calendar'));
         }
         $mform->addGroup($sessiondays, 'sessiondays', get_string('repeaton', 'mod_punchclock'), array('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), true);
         $mform->addRule('sessiondays', null, 'required', null, 'client');
@@ -70,10 +70,10 @@ class mod_punchclock_mod_form extends moodleform_mod
             '1' => '1',
             '2' => '2'
         );
-        
+
         $dropdown = $mform->createElement('select', 'addsessionblocks', '', $options);
         $staticText = $mform->createElement('static', 'addsessionblocks_label', '', ' block(s)');
-        
+
         $mform->addGroup(array($dropdown, $staticText), 'dropdown_group', get_string('addsessionblocks', 'mod_punchclock'), ' ', false);
 
 
@@ -98,8 +98,61 @@ class mod_punchclock_mod_form extends moodleform_mod
             false
         );
 
-        // $mform->addElement('text', 'configure_time', get_string('configuretimeblocks', 'mod_punchclock'));
-        // $mform->setType('configure_time', PARAM_RAW);
+        $mform->addElement('header', 'exceptionsection', get_string('exceptions', 'mod_punchclock'));
+        $mform->setExpanded('exceptionsection');
+        
+        $exceptionfields = [];
+        
+        $exceptionfields[] = $mform->createElement('text', 'description', get_string('description', 'mod_punchclock'));
+        $mform->setType('description', PARAM_TEXT);
+        $exceptionfields[] = $mform->createElement('date_selector', 'startdate', get_string('from', 'mod_punchclock'));
+        $exceptionfields[] = $mform->createElement('date_selector', 'enddate', get_string('to', 'mod_punchclock'));
+
+        $exceptionfields[] = $mform->createElement('html', '
+            <div class="exception-divider my-4 mx-auto w-75">
+                <hr class="my-3">
+            </div>
+        ');
+
+        $repeatno = 1;
+
+        // Define repeat element options properly
+        $repeateloptions = array();
+        $repeateloptions['description']['default'] = '';
+        $repeateloptions['description']['type'] = PARAM_TEXT;
+        $repeateloptions['startdate']['default'] = time();
+        $repeateloptions['startdate']['type'] = PARAM_INT;
+        $repeateloptions['enddate']['default'] = time() + 86400;
+        $repeateloptions['enddate']['type'] = PARAM_INT;
+
+        $this->repeat_elements(
+            $exceptionfields, 
+            $repeatno, 
+            $repeateloptions, 
+            'exception_repeats', 
+            'exception_add_fields', 
+            1, 
+            get_string('addexception', 'mod_punchclock')
+        );
+        
+        // // Add validation rules after repeat_elements() (for each instance)
+        // $mform->addRule('description', null, 'required', null, 'client');
+        // $mform->addRule('startdate', null, 'required', null, 'client');
+        // $mform->addRule('enddate', null, 'required', null, 'client');
+        
+        $mform->addElement('html', '
+            <div class="divider bulk-hidden d-flex justify-content-center align-items-center always-visible my-3">
+                <hr>
+                <div class="divider-content px-3">
+                    <button type="button" id="add-holiday-button" class="btn add-content d-flex justify-content-center align-items-center p-1 icon-no-margin" >
+                        <div class="px-1">
+                            <i class="icon fa fa-plus fa-fw " aria-hidden="true"></i>
+                            <span class="activity-add-text pr-1">' . get_string('addexception', 'mod_punchclock') . '</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        ');
 
         // Standard course module elements
         $this->standard_coursemodule_elements();
