@@ -160,7 +160,7 @@ class mod_punchclock_mod_form extends moodleform_mod
             </div>
         ');
 
-        $repeatno = 1;
+        $repeatno = 0;
 
         $repeateloptions = array();
         $repeateloptions['description']['default'] = '';
