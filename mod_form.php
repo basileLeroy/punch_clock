@@ -14,11 +14,30 @@ class mod_punchclock_mod_form extends moodleform_mod
 {
     function definition()
     {
-        global $CFG, $COURSE, $DB, $PAGE;
+        global $PAGE;
 
         $PAGE->requires->js_call_amd('mod_punchclock/punchclock_setup', 'init');
 
         $mform = $this->_form;
+
+        // General section for the plugin
+        $mform = $this->create_general_fields($mform);
+
+        // Configurations to set up the sessions
+        $mform = $this->create_config_fields($mform);
+
+        // Add exception dates to exclude from the sessions
+        $mform = $this->create_exception_fields($mform);
+
+        // Standard course module elements
+        $this->standard_coursemodule_elements();
+
+        // Submit buttons
+        $this->add_action_buttons();
+    }
+
+    private function create_general_fields ($mform) {
+        global $CFG, $COURSE, $DB;
 
         // Get course data
         $course = $DB->get_record('course', ['id' => $COURSE->id], 'startdate, enddate');
@@ -61,6 +80,10 @@ class mod_punchclock_mod_form extends moodleform_mod
         $mform->addGroup($sessiondays, 'sessiondays', get_string('repeaton', 'mod_punchclock'), array('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), true);
         $mform->addRule('sessiondays', null, 'required', null, 'client');
 
+        return $mform;
+    }
+
+    private function create_config_fields ($mform) {
         $mform->addElement('header', 'sessionconfig', get_string('configsection', 'mod_punchclock'));
         $mform->setExpanded('sessionconfig');
 
@@ -98,6 +121,10 @@ class mod_punchclock_mod_form extends moodleform_mod
             false
         );
 
+        return $mform;
+    }
+
+    private function create_exception_fields ($mform) {
         $mform->addElement('header', 'exceptionsection', get_string('exceptions', 'mod_punchclock'));
         $mform->setExpanded('exceptionsection');
         
@@ -124,7 +151,6 @@ class mod_punchclock_mod_form extends moodleform_mod
 
         $repeatno = 1;
 
-        // Define repeat element options properly
         $repeateloptions = array();
         $repeateloptions['description']['default'] = '';
         $repeateloptions['description']['type'] = PARAM_TEXT;
@@ -144,11 +170,6 @@ class mod_punchclock_mod_form extends moodleform_mod
             true
         );
         
-        // // Add validation rules after repeat_elements() (for each instance)
-        // $mform->addRule('description', null, 'required', null, 'client');
-        // $mform->addRule('startdate', null, 'required', null, 'client');
-        // $mform->addRule('enddate', null, 'required', null, 'client');
-        
         $mform->addElement('html', '
             <div class="divider bulk-hidden d-flex justify-content-center align-items-center always-visible my-3">
                 <hr>
@@ -163,10 +184,6 @@ class mod_punchclock_mod_form extends moodleform_mod
             </div>
         ');
 
-        // Standard course module elements
-        $this->standard_coursemodule_elements();
-
-        // Submit buttons
-        $this->add_action_buttons();
+        return $mform;
     }
 }
