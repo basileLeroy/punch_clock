@@ -56,7 +56,7 @@ define([], function() {
             const exceptionsCounter = document.querySelector('[name="exception_repeats"]');
 
             updateButtonVisibility(addTimeBlockCustomButton, timeblockCounter, 2);
-            updateButtonVisibility(addExceptionCustomButton, exceptionsCounter, 2);
+            updateButtonVisibility(addExceptionCustomButton, exceptionsCounter, 4);
         }
     };
 });
