@@ -100,21 +100,21 @@ class mod_punchclock_mod_form extends moodleform_mod
         $mform->addGroup(array($dropdown, $staticText), 'dropdown_group', get_string('addsessionblocks', 'mod_punchclock'), ' ', false);
 
 
-        $hours = array_combine(range(0, 23), range(0, 23));
-        $minutes = array_combine(range(0, 59), range(0, 59));
+        $hours = array_combine(range(0, 23), array_map(fn($h) => sprintf('%02d', $h), range(0, 23)));
+        $minutes = array_combine(range(0, 59), array_map(fn($m) => sprintf('%02d', $m), range(0, 59)));
 
 
         // BLOCK 1 TIME SELECTION
-        $startHour1 = $mform->createElement('select', 'starthour1', '', $hours);
-        $startMinute1 = $mform->createElement('select', 'startminute1', '', $minutes);
-        $startLabel1 = $mform->createElement('static', 'startlabel1', '', ' From: ');
+        $startHour = $mform->createElement('select', 'starthour', '', $hours);
+        $startMinute = $mform->createElement('select', 'startminute', '', $minutes);
+        $startLabel = $mform->createElement('static', 'startlabel', '', ' From: ');
 
-        $endHour1 = $mform->createElement('select', 'endhour1', '', $hours);
-        $endMinute1 = $mform->createElement('select', 'endminute1', '', $minutes);
-        $endLabel1 = $mform->createElement('static', 'endlabel1', '', ' - To: ');
+        $endHour = $mform->createElement('select', 'endhour', '', $hours);
+        $endMinute = $mform->createElement('select', 'endminute', '', $minutes);
+        $endLabel = $mform->createElement('static', 'endlabel', '', ' - To: ');
 
         $mform->addGroup(
-            array($startLabel1, $startHour1, $startMinute1, $endLabel1, $endHour1, $endMinute1),
+            array($startLabel, $startHour, $startMinute, $endLabel, $endHour, $endMinute),
             'block1time',
             get_string('block1time', 'mod_punchclock'),
             ' ',
