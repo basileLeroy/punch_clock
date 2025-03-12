@@ -82,6 +82,15 @@ define([], function() {
                     createTimeBlock2();
                 }
             });
+
+            let customButton = document.getElementById("add-holiday-button");
+            let defaultButton = document.getElementById("id_exception_add_fields");
+
+            if (customButton && defaultButton) {
+                customButton.addEventListener("click", function () {
+                    defaultButton.click();
+                });
+            }
         }
     };
 });
