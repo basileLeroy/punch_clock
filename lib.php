@@ -28,27 +28,21 @@ function punchclock_add_instance($data, $mform = null)
 
     $transaction = $DB->start_delegated_transaction(); // Start transaction
 
-    try {
-        // Insert into the main table
-        $instance_id = insert_punchclock($DB, $data);
+    $instance_id = insert_punchclock($DB, $data);
 
-        // Insert related exceptions if they exist
-        // if (!empty($data->exceptions)) {
-        //     insert_punchclock_exceptions($data->exceptions, $instance_id);
-        // }
-
-        // // Insert other related data (future-proof)
-        // if (!empty($data->extra_settings)) {
-        //     insert_punchclock_settings($data->extra_settings, $instance_id);
-        // }
-
-        $transaction->allow_commit(); // Commit all changes
-        return $instance_id; // Return the main record ID
-
-    } catch (Exception $e) {
-        $transaction->rollback($e); // Rollback on failure
-        return false;
+    // Insert related holidays if they exist
+    if ($data->description && $data->startdate && $data->enddate) {
+        insert_punchclock_holidays($data, $instance_id);
     }
+
+    // // Insert other related data (future-proof)
+    if (!empty($data->extra_settings)) {
+        insert_punchclock_settings($data->extra_settings, $instance_id);
+    }
+
+    $transaction->allow_commit(); // Commit all changes
+
+    return $instance_id;
 }
 
 /**

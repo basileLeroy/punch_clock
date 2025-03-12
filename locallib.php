@@ -40,6 +40,54 @@ function insert_punchclock($DB, $data) {
     return $DB->insert_record('punchclock', $record, true);
 }
 
-function insert_punchclock_exception ($data) {
+/**
+ * Inserts Holiday records into the database.
+ *
+ * This function processes holiday data and inserts it into the 'punchclock_holidays' table.
+ * It ensures that:
+ * - Descriptions are set to null if empty.
+ * - Start dates that are in the past are set to null, along with their end dates.
+ *
+ * @param object $data An object containing holiday details, including:
+ *                     - description (array of strings)
+ *                     - startdate (array of timestamps)
+ *                     - enddate (array of timestamps)
+ * @param int $instance_id The ID of the punchclock instance to associate with course.
+ * @return bool Returns true if the holidays were inserted successfully, false if no valid data was provided.
+ */
+function insert_punchclock_holidays($data, $instance_id) {
+    global $DB;
 
+    if (!$instance_id || empty($data->description)) {
+        return false;
+    }
+
+    $today = strtotime('today');
+
+    foreach ($data->description as $index => $description) {
+
+        $description = trim($description);
+        $reason = empty($description) ? null : $description;
+
+        // Validate startdate: if today or past, set startdate & enddate to null
+        $startdate = isset($data->startdate[$index]) ? (int)$data->startdate[$index] : null;
+        $enddate = isset($data->enddate[$index]) ? (int)$data->enddate[$index] : null;
+
+        if (empty($startdate) || $startdate < $today) {
+            $startdate = $enddate = null;
+        }
+
+        $record = new stdClass();
+        $record->punchclock_id = $instance_id;
+        $record->reason = $reason;
+        $record->startdate = $startdate;
+        $record->enddate = $enddate;
+        $record->created_at = time();
+
+        // Insert record into DB
+        $DB->insert_record('punchclock_holidays', $record, false);
+    }
+
+    return true;
 }
+
