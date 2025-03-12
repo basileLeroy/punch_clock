@@ -21,6 +21,11 @@ function punchclock_add_instance($data, $mform = null)
 {
     global $DB;
 
+    echo "<pre>";
+    var_dump($data);
+    echo "</pre>";
+    die();
+
     $transaction = $DB->start_delegated_transaction(); // Start transaction
 
     try {
