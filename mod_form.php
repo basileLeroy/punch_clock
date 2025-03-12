@@ -115,8 +115,8 @@ class mod_punchclock_mod_form extends moodleform_mod
 
         $mform->addGroup(
             array($startLabel, $startHour, $startMinute, $endLabel, $endHour, $endMinute),
-            'block1time',
-            get_string('block1time', 'mod_punchclock'),
+            'timeblock',
+            get_string('timeblock', 'mod_punchclock'),
             ' ',
             false
         );
