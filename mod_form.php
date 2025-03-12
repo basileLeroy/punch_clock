@@ -197,4 +197,24 @@ class mod_punchclock_mod_form extends moodleform_mod
 
         return $mform;
     }
+
+    public function validation($data, $files) {
+        $errors = [];
+        $today = time(); // Current timestamp (start of today)
+    
+        // Loop through the repeated elements
+        foreach ($data['startdate'] as $index => $startdate) {
+            if ($startdate < $today) {
+                $errors["startdate[$index]"] = get_string('startdatecannotbepast', 'mod_punchclock');
+            }
+            if ($data['enddate'][$index] < $today) {
+                $errors["enddate[$index]"] = get_string('enddatecannotbepast', 'mod_punchclock');
+            }
+            if ($data['enddate'][$index] < $startdate) {
+                $errors["enddate[$index]"] = get_string('enddatebeforestartdate', 'mod_punchclock');
+            }
+        }
+    
+        return $errors;
+    }
 }
