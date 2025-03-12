@@ -66,6 +66,25 @@ function createSelect(name, min, max) {
     return selectHTML;
 }
 
+/**
+ * Removes the exception block, including description, start date, end date fields,
+ * as well as the delete button section and divider section.
+ *
+ * @param {number} index - The index of the exception block to remove.
+ * @param {HTMLElement} deleteButtonSection - The section containing the delete button.
+ * @param {HTMLElement} dividerSection - The divider section separating exception blocks.
+ */
+function removeExceptionBlock (index, deleteButtonSection, dividerSection) {
+    let descriptionField = document.getElementById(`fitem_id_description_${index}`);
+    let startDateField = document.getElementById(`fitem_id_startdate_${index}`);
+    let endDateField = document.getElementById(`fitem_id_enddate_${index}`);
+
+    [descriptionField, startDateField, endDateField, deleteButtonSection, dividerSection].forEach(element => {
+        if (element) {
+            element.remove();
+        }
+    });
+}
 
 define([], function() {
     return {
@@ -85,9 +104,26 @@ define([], function() {
 
             let customButton = document.getElementById("add-holiday-button");
             let defaultButton = document.getElementById("id_exception_add_fields");
+            let RemoveExceptionButtons = document.querySelectorAll('#remove-exception-button');
+
+            if (RemoveExceptionButtons[0]) {
+                let parent = RemoveExceptionButtons[0].parentElement;
+                parent.className = "d-none";
+            }
+
+            RemoveExceptionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    let parent = this.parentElement;
+                    let previousSibling = parent.previousElementSibling;
+                    let divider = parent.nextElementSibling;
+                    let sectionIndex = previousSibling.dataset.groupname.match(/\d+/)[0];
+
+                    removeExceptionBlock(sectionIndex, parent, divider);
+                });
+            });
 
             if (customButton && defaultButton) {
-                customButton.addEventListener("click", function () {
+                customButton.addEventListener("click", function() {
                     defaultButton.click();
                 });
             }
