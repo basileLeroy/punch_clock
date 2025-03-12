@@ -4,9 +4,9 @@
  */
 function removeDefaultButtons(buttons) {
     buttons.forEach(button => {
-        if (button[0]) {
-            let parent = button[0].parentElement;
-            parent.className = "d-none";
+        if (button) {
+            let buttonBox = button.parentElement.parentElement;
+            buttonBox.className = "d-none";
         }
     });
 }
@@ -34,9 +34,8 @@ function updateButtonVisibility(button, counterElement, maxCount) {
     let counter = parseInt(counterElement.value, 10);
 
     if (counter >= maxCount) {
-        button.style.display = "none";
-    } else {
-        button.style.display = "block";
+        let buttonBox = button.parentElement.parentElement;
+        buttonBox.className = "d-none";
     }
 }
 
@@ -44,7 +43,7 @@ define([], function() {
     return {
         init: function() {
             let addTimeBlockDefaultButton = document.getElementById("id_timeblock_add_fields");
-            let addTimeBlockCustomButton = "";
+            let addTimeBlockCustomButton = document.getElementById("add-timeblock-button");
             let addExceptionDefaultButton = document.getElementById("id_exception_add_fields");
             let addExceptionCustomButton = document.getElementById("add-holiday-button");
 
