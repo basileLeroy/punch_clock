@@ -58,10 +58,6 @@ function insert_punchclock($DB, $data) {
 function insert_punchclock_holidays($data, $instance_id) {
     global $DB;
 
-    if (!$instance_id || empty($data->description)) {
-        return false;
-    }
-
     $today = strtotime('today');
 
     foreach ($data->description as $index => $description) {
@@ -87,7 +83,5 @@ function insert_punchclock_holidays($data, $instance_id) {
         // Insert record into DB
         $DB->insert_record('punchclock_holidays', $record, false);
     }
-
-    return true;
 }
 
