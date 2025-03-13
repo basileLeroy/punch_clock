@@ -29,6 +29,8 @@ function punchclock_add_instance($data, $mform = null)
         insert_punchclock_holidays($data, $instance_id);
     }
 
+    insert_punchclock_sessions($data, $instance_id);
+
     echo "<pre>";
     print_r($data);
     echo "</pre>";
