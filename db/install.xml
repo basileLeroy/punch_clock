@@ -16,10 +16,10 @@
                 <FIELD NAME="days" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="early_access" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
                 <FIELD NAME="number_of_blocks" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-                <FIELD NAME="block1_start" TYPE="char" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
-                <FIELD NAME="block1_stop" TYPE="char" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
-                <FIELD NAME="block2_start" TYPE="char" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
-                <FIELD NAME="block2_stop" TYPE="char" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
+                <FIELD NAME="block1_start" TYPE="char" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="block1_stop" TYPE="char" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="block2_start" TYPE="char" NOTNULL="false" DEFAULT="null" SEQUENCE="false" />
+                <FIELD NAME="block2_stop" TYPE="char" NOTNULL="false" DEFAULT="null" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
