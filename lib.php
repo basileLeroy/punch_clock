@@ -21,27 +21,20 @@ function punchclock_add_instance($data, $mform = null)
 {
     global $DB;
 
-
-    $transaction = $DB->start_delegated_transaction(); // Start transaction
+    $transaction = $DB->start_delegated_transaction();
 
     $instance_id = insert_punchclock($DB, $data);
 
-    // Insert related holidays if they exist
-    if ($data->description && $data->startdate && $data->enddate) {
-        $result = insert_punchclock_holidays($data, $instance_id);
+    if (!empty($data->description) && !empty($data->startdate) && !empty($data->enddate)) {
+        insert_punchclock_holidays($data, $instance_id);
     }
 
     echo "<pre>";
-    var_dump($data);
+    print_r($data);
     echo "</pre>";
     die();
 
-    // // Insert other related data (future-proof)
-    // if (!empty($data->extra_settings)) {
-    //     insert_punchclock_settings($data->extra_settings, $instance_id);
-    // }
-
-    $transaction->allow_commit(); // Commit all changes
+    $transaction->allow_commit();
 
     return $instance_id;
 }
