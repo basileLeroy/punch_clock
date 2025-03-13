@@ -29,6 +29,7 @@ $string['starttime'] = 'Start Time:';
 $string['startdatecannotbepast'] = 'The start date cannot be in the past.';
 $string['enddatecannotbepast'] = 'The end date cannot be in the past.';
 $string['enddatebeforestartdate'] = 'The end date cannot be before the start date.';
+$string['timecannotbenull'] = 'Your time block cannot be null.';
 $string['endtime'] = 'End Time:';
 $string['holidays'] = 'Holidays / Time off';
 $string['addholiday'] = 'Add new Holiday';

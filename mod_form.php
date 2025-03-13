@@ -200,18 +200,27 @@ class mod_punchclock_mod_form extends moodleform_mod
 
     public function validation($data, $files) {
         $errors = [];
-        $today = time(); // Current timestamp (start of today)
-    
-        // Loop through the repeated elements
-        foreach ($data['startdate'] as $index => $startdate) {
-            if ($startdate < $today) {
-                $errors["startdate[$index]"] = get_string('startdatecannotbepast', 'mod_punchclock');
+        $today = time();
+
+        // Validate Holiday blocks
+        if (!empty($data["startdate"])) {
+            foreach ($data['startdate'] as $index => $startdate) {
+                if ($startdate < $today) {
+                    $errors["startdate[$index]"] = get_string('startdatecannotbepast', 'mod_punchclock');
+                }
+                if ($data['enddate'][$index] < $today) {
+                    $errors["enddate[$index]"] = get_string('enddatecannotbepast', 'mod_punchclock');
+                }
+                if ($data['enddate'][$index] < $startdate) {
+                    $errors["enddate[$index]"] = get_string('enddatebeforestartdate', 'mod_punchclock');
+                }
             }
-            if ($data['enddate'][$index] < $today) {
-                $errors["enddate[$index]"] = get_string('enddatecannotbepast', 'mod_punchclock');
-            }
-            if ($data['enddate'][$index] < $startdate) {
-                $errors["enddate[$index]"] = get_string('enddatebeforestartdate', 'mod_punchclock');
+        }
+
+        // Validate Time blocks
+        foreach ($data['starthour'] as $index => $startHour) {
+            if (($startHour === "0" && $data["startminute"][$index] === "0") || ($data["endhour"][$index] === "0" && $data["endminutes"][$index] === "0")) {
+                $errors["timeblock[$index]"] = get_string('timecannotbenull', 'mod_punchclock');
             }
         }
     
