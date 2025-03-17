@@ -96,7 +96,7 @@ function insert_punchclock_sessions($data, $instance_id) {
     $starttraining = $data->start_date;
     $endtraining = $data->end_date;
     $twentyfourhours = 86400;
-    $allowed_days = $data->sessiondays;
+    $allowed_days = array_keys(array_filter((array) $data->sessiondays));
 
     $courseid = $data->course;
     $context = context_course::instance($courseid);
@@ -104,6 +104,7 @@ function insert_punchclock_sessions($data, $instance_id) {
 
     $students = get_role_users($roleid, $context);
 
+    $counter = 0;
     foreach ($students as $student) {
         for ($date = $starttraining; $date <= $endtraining; $date += $twentyfourhours) {
             $weekday = date('D', $date);
@@ -118,10 +119,13 @@ function insert_punchclock_sessions($data, $instance_id) {
                 continue;
             }
 
+            $counter++;
+
             $record = new stdClass();
             $record->user_id = $student->id;
             $record->course_id = $courseid;
             $record->punchclock_id = $instance_id;
+            $record->date = $date;
             $record->checkin_default_a = sprintf('%02d:%02d:00', $data->starthour[0] ?? 0, $data->startminute[0] ?? 0);
             $record->checkout_default_a = sprintf('%02d:%02d:00', $data->endhour[0] ?? 0, $data->endminute[0] ?? 0);
             $record->checkin_default_b = sprintf('%02d:%02d:00', $data->starthour[1] ?? 0, $data->startminute[1] ?? 0);
