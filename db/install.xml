@@ -62,6 +62,7 @@
                 <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="punchclock_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="date" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="checkin_default_a" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="checkin_a" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
                 <FIELD NAME="checkout_default_a" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
@@ -70,8 +71,8 @@
                 <FIELD NAME="checkin_b" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
                 <FIELD NAME="checkout_default_b" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="null" SEQUENCE="false" />
                 <FIELD NAME="checkout_b" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
-                <FIELD NAME="status_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-                <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+                <FIELD NAME="status_id" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
+                <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
