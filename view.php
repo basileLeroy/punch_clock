@@ -20,19 +20,35 @@ $PAGE->set_url('/mod/punchclock/view.php', ['id' => $id]);
 $PAGE->set_title(get_string('modulename', 'mod_punchclock'));
 $PAGE->set_heading(format_string($cm->name));
 
-echo $OUTPUT->header();
+// LOGIC
 
-if (has_capability('mod/punchclock:manage', $context)) {
+function display_teacher_interface ($OUTPUT) {
+
     echo "<h3>Teacher View</h3>";
     echo "<p>This is the teacher-specific content.</p>";
-} else {
+
+}
+
+function display_student_interface ($OUTPUT) {
 
     $templatecontext = (object)[
         'content' => 'something'
     ];
 
     echo "<h3>Student View</h3>";
-    echo $OUTPUT->render_from_template('mod_punchclock/view', $templatecontext);
+
+    return $OUTPUT->render_from_template('mod_punchclock/view', $templatecontext);
+}
+
+// RENDER VIEW
+
+echo $OUTPUT->header();
+
+if (has_capability('mod/punchclock:manage', $context)) {
+    display_teacher_interface($OUTPUT);
+} else {
+
+    echo display_student_interface($OUTPUT);
 }
 
 echo $OUTPUT->footer();
