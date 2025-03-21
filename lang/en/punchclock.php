@@ -30,6 +30,7 @@ $string['getcourseenddate'] = "Select course end date";
 $string['getcoursestartdate'] = "Select course start date";
 $string['holidays'] = 'Holidays / Time off';
 $string['opensessionearly'] = "Open session early";
+$string['pluginadministration'] = 'Punchclock Administration';
 $string['removeholiday'] = 'Remove block';
 $string['repeaton'] = "Repeat on";
 $string['sessiondaysinfo'] = "Default if no days are selected is Mon-Fri";
