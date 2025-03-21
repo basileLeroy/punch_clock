@@ -20,12 +20,23 @@ $PAGE->set_url('/mod/punchclock/view.php', ['id' => $id]);
 $PAGE->set_title(get_string('modulename', 'mod_punchclock'));
 $PAGE->set_heading(format_string($cm->name));
 
+
 // LOGIC
 
 function display_teacher_interface ($OUTPUT) {
+    $id = required_param('id', PARAM_INT);
 
-    echo "<h3>Teacher View</h3>";
-    echo "<p>This is the teacher-specific content.</p>";
+    $buttons = [
+        ['text' => 'Sessions', 'url' => new moodle_url('/mod/punchclock/sessions.php', ['id' => $id]), 'class' => 'btn btn-outline-primary mx-3'],
+        ['text' => 'Absences', 'url' => new moodle_url('/mod/punchclock/absences.php', ['id' => $id]), 'class' => 'btn btn-outline-primary mx-3'],
+        ['text' => 'Exports', 'url' => new moodle_url('/mod/punchclock/exports.php', ['id' => $id]), 'class' => 'btn btn-outline-primary mx-3'],
+    ];
+
+    $context = (object)[
+        'buttons' => $buttons
+    ];
+
+    return $OUTPUT->render_from_template('mod_punchclock/manage', $context);
 
 }
 
@@ -45,7 +56,7 @@ function display_student_interface ($OUTPUT) {
 echo $OUTPUT->header();
 
 if (has_capability('mod/punchclock:manage', $context)) {
-    display_teacher_interface($OUTPUT);
+    echo display_teacher_interface($OUTPUT);
 } else {
 
     echo display_student_interface($OUTPUT);
