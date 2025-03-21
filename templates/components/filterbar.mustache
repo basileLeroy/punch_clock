@@ -24,25 +24,14 @@
 }}
 <div class="attfiltercontrols mb-3">
     <div class="row m-n2">
-        <div class="curdatecontrols col-auto d-flex align-items-center p-2">
-            <script>
-                //<![CDATA[
-                M.attendance = {"cal_months":["January","February","March","April","May","June","July","August","September","October","November","December"],"cal_week_days":["Su","Mo","Tu","We","Th","Fr","Sa"],"cal_start_weekday":"1","cal_cur_date":1742553779};
-                //]]>
-            </script>
-            <a href="https://moodle.becode.org/mod/attendance/manage.php?id=523&amp;curdate=1741561200">◄</a>
-            <form id="currentdate" action="https://moodle.becode.org/mod/attendance/manage.php" method="post">
-                <button title="Choose date" id="show" class="btn btn-secondary" type="button">Mar 17 - Mar 23</button>
-                <input type="hidden" id="id" name="id" value="523">
-                <input type="hidden" id="curdate" name="curdate" value="">
-            </form>
-            <a href="https://moodle.becode.org/mod/attendance/manage.php?id=523&amp;curdate=1742770800">►</a>
+        <div class="datecontroller d-flex flex-row w-full p-2">
+            {{{calendar}}}
         </div>
         <div class="viewcontrols col-auto p-2 ml-xl-auto">
             <div>
                 {{#buttons}}
                     {{^active}}
-                        <a href="{{url}}">
+                        <a href="{{{url}}}">
                             <button class="{{class}}">
                                 {{text}}
                             </button>

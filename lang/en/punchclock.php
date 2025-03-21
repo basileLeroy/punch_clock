@@ -23,6 +23,7 @@ $string['description'] = 'Description';
 $string['enddatebeforestartdate'] = 'The end date cannot be before the start date.';
 $string['enddatecannotbepast'] = 'The end date cannot be in the past.';
 $string['endtime'] = 'End Time:';
+$string['filter'] = 'Filter';
 $string['from'] = 'From';
 $string['generalsection'] = "General";
 $string['getactivityname'] = 'Your activity name';
