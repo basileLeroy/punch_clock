@@ -17,14 +17,17 @@ defined('MOODLE_INTERNAL') || die();
  */
 class sessions_overview {
     private $sessions;
+    private $cmid;
 
     /**
      * Constructor
      *
-     * @param array $sessions An array of session data
+     * @param array $data An array of session data
+     * @param int $cmid Course module ID
      */
-    public function __construct(array $sessions) {
-        $this->sessions = $sessions;
+    public function __construct(array $data, int $cmid) {
+        $this->cmid = $cmid;
+        $this->prepare_sessions($data["sessions"]);
     }
 
     /**
@@ -33,7 +36,34 @@ class sessions_overview {
      * @param array $sessions New session data.
      */
     public function update(array $sessions) {
-        $this->sessions = $sessions;
+        $this->prepare_sessions($sessions);
+    }
+
+    /**
+     * Prepares session data with action links
+     *
+     * @param array $sessions Raw session data
+     */
+    private function prepare_sessions(array $sessions) {
+        $this->sessions = [];
+        foreach ($sessions as $session) {
+            $prepared = [
+                'date' => userdate($session->date, get_string('strftimedatefullshort')),
+                'view_link' => new \moodle_url('/mod/punchclock/view.php', [
+                    'id' => $this->cmid,
+                    'date' => $session->date
+                ]),
+                'update_link' => new \moodle_url('/mod/punchclock/edit.php', [
+                    'id' => $this->cmid,
+                    'date' => $session->date
+                ]),
+                'delete_link' => new \moodle_url('/mod/punchclock/delete.php', [
+                    'id' => $this->cmid,
+                    'date' => $session->date
+                ])
+            ];
+            $this->sessions[] = $prepared;
+        }
     }
 
     /**
@@ -64,8 +94,8 @@ class sessions_overview {
                 $html .= '<tr>';
                 $html .= '<td style="width: 33%;">' . htmlspecialchars($row['date']) . '</td>';
                 $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['view_link']) . '" class="btn btn-link">View</a></td>';
-                $html .= '<td class="text-center"><a href="#" class="btn btn-sm btn-primary">Edit</a></td>';
-                $html .= '<td class="text-center"><a href="#" class="btn btn-sm btn-danger">Delete</a></td>';
+                $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['update_link']) . '" class="btn btn-sm btn-primary">Edit</a></td>';
+                $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['delete_link']) . '" class="btn btn-sm btn-danger">Delete</a></td>';
                 $html .= '</tr>';
             }
         }
