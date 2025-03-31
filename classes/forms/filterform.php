@@ -13,23 +13,29 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/formslib.php");
 
 use moodleform;
+use moodle_url;
 
 class filterform extends moodleform
 {
+    public function __construct($actionurl = null, $customdata = null)
+    {
+        if (!$actionurl) {
+            $actionurl = new moodle_url('/mod/punchclock/sessions.php', [
+                'id' => $customdata['id'] ?? null,
+                'view' => $customdata['view'] ?? null
+            ]);
+        }
+        parent::__construct($actionurl, $customdata);
+    }
+    
     public function definition()
     {
-        global $PAGE;
-
-        $data = $this->_customdata ?? [];
         $mform = $this->_form;
-
-        $id = $data["id"] ?? null;
-        $id = $data["view"] ?? null;
 
         $mform->addGroup(
             [
                 $mform->createElement('date_selector', 'date', '', ['style' => 'width: auto; display: inline-block;']),
-                $mform->createElement('submit', 'submitbutton', get_string('filter', 'mod_punchclock'), ['class' => 'btn btn-primary ms-2']),
+                $mform->createElement('submit', 'submitbutton', get_string('filter', 'mod_punchclock'), ['class' => 'btn btn-primary']),
             ], 'calendarform', '', [' '], false
         );
     }
