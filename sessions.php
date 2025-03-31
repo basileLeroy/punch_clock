@@ -13,12 +13,16 @@ require_once($CFG->dirroot . '/mod/punchclock/classes/forms/filterform.php');
 require_once($CFG->dirroot . '/mod/punchclock/classes/enums/filtercontrols.php');
 
 use mod_punchclock\forms\filterform;
+use mod_punchclock\utils\date_utils;
 use mod_punchclock\enums\filter_controls;
 use mod_punchclock\output\sessions_overview;
 use mod_punchclock\output\time_range_selector;
 
+
 $id         = required_param('id', PARAM_INT);
 $view       = optional_param('view', filter_controls::WEEK, PARAM_INT);
+$date_param = optional_param('date', 0, PARAM_INT);
+$date       = ($date_param > 0) ? $date_param : null;
 $cm         = get_coursemodule_from_id('punchclock', $id, 0, false, MUST_EXIST);
 $course     = get_course($cm->course);
 $context    = context_module::instance($cm->id);
@@ -34,20 +38,44 @@ $PAGE->set_context($context);
 $filtercontrols = [];
 
 $buttons = new time_range_selector($id, $view);
-$mform = new filterform(null, ['id' => $id, 'view' => $view]);
+$mform = new filterform(null, ['id' => $id, 'view' => $view, 'date' => $date ?? null]);
 
 $filtercontrols = [
     "calendar" => $mform->render(),
     "buttons" => $buttons->get(),
 ];
 
-$table = new sessions_overview([]);
+$date_range = date_utils::get_date_range($view, $date ?? null);
+
+$sessions = $DB->get_records_sql("
+    SELECT 
+        FROM_UNIXTIME(date, '%Y-%m-%d') as date_str,
+        date,
+        COUNT(id) as session_count
+    FROM {punchclock_sessions}
+    WHERE course_id = :course_id
+    AND date BETWEEN :startdate AND :enddate
+    GROUP BY date_str
+    ORDER BY date_str ASC
+", [
+    'course_id' => $cm->instance, // Match column name exactly
+    'startdate' => strtotime($date_range['start']), // Convert to timestamp
+    'enddate' => strtotime($date_range['end']) // Convert to timestamp
+]);
+
+// echo "<h3>Database Sessions:";
+// echo "<br>";
+// echo "<pre>";
+// print_r($sessions);
+// echo "</pre>";
+// die();
+
+$table = new sessions_overview(['sessions' => $sessions], $cm->instance);
 
 if ($mform->is_submitted() && $mform->is_validated()) {
     $data = $mform->get_data();
     if ($data) {
-        $date = $data->date ?? null;
-        // Redirect with the date parameter while keeping existing ones
+        $date = $data->calendarform['date'] ?? null;
         redirect(new moodle_url('/mod/punchclock/sessions.php', [
             'id' => $id,
             'view' => $view,
