@@ -21,8 +21,8 @@ class filterform extends moodleform
     {
         if (!$actionurl) {
             $actionurl = new moodle_url('/mod/punchclock/sessions.php', [
-                'id' => $customdata['id'] ?? null,
-                'view' => $customdata['view'] ?? null
+                'id' => $customdata['id'] ?? 0,
+                'view' => $customdata['view'] ?? 0
             ]);
         }
         parent::__construct($actionurl, $customdata);
