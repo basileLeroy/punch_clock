@@ -19,6 +19,7 @@ require_login($cm->course, true, $cm);
 $PAGE->set_url('/mod/punchclock/view.php', ['id' => $id]);
 $PAGE->set_title(get_string('modulename', 'mod_punchclock'));
 $PAGE->set_heading(format_string($cm->name));
+$PAGE->requires->css('/mod/punchclock/styles/styles.css');
 
 
 // LOGIC
@@ -41,7 +42,7 @@ function display_teacher_interface ($OUTPUT) {
 }
 
 function display_student_interface($OUTPUT) {
-    global $USER, $COURSE, $PAGE;
+    global $USER, $COURSE, $DB;
 
     $id = required_param('id', PARAM_INT);
     $cm = get_coursemodule_from_id('punchclock', $id);
