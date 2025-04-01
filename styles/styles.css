@@ -1,0 +1,11 @@
+.step-icon {
+  box-shadow: 4px 4px 0 0 #dee2e6;
+}
+
+.step-icon:hover {
+  background-color: aqua !important;
+  left: 4px;
+  top: 4px;
+  box-shadow: 0 0 0 0 #fff;
+}
+
