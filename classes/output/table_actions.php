@@ -22,6 +22,10 @@ use moodle_url;
 class table_actions
 {
 
+    private function datepicker() {
+
+    }
+
     /**
      * Prepares navigation elements with navigation links
      * @return string Navigation element.
@@ -44,7 +48,7 @@ class table_actions
                 return '<div class="navigation text-end mb-3">'
                     . '<div class="btn-group">'
                     . '<a href="' . new moodle_url($PAGE->url, ['id' => $id, 'view' => $view, 'date' => $prevMonth]) . '" class="btn btn-secondary">◀️ Previous Month</a>'
-                    . '<input type="text" class="btn btn-light disabled" value="' . $currentMonth . '" readonly>'
+                    . '<input type="text" id="datepicker" class="btn btn-light disabled" value="' . $currentMonth . '" readonly>'
                     . '<a href="' . new moodle_url($PAGE->url, ['id' => $id, 'view' => $view, 'date' => $nextMonth]) . '" class="btn btn-secondary">Next Month ▶️</a>'
                     . '</div>'
                     . '</div>';
@@ -60,7 +64,7 @@ class table_actions
                 return '<div class="navigation text-end mb-3">'
                     . '<div class="btn-group">'
                     . '<a href="' . new moodle_url($PAGE->url, ['id' => $id, 'view' => $view, 'date' => $prevWeek]) . '" class="btn btn-secondary">◀️ Previous Week</a>'
-                    . '<input type="text" class="btn btn-light disabled" value="' . $dateRange . '" readonly>'
+                    . '<input type="text" id="datepicker" class="btn btn-light disabled" value="' . $dateRange . '" readonly>'
                     . '<a href="' . new moodle_url($PAGE->url, ['id' => $id, 'view' => $view, 'date' => $nextWeek]) . '" class="btn btn-secondary">Next Week ▶️</a>'
                     . '</div>'
                     . '</div>';
@@ -73,7 +77,7 @@ class table_actions
                 return '<div id="navigation" class="text-end mb-3">'
                     . '<div class="btn-group">'
                     . '<a href="' . new moodle_url($PAGE->url, ['id' => $id, 'view' => $view, 'date' => $prevDay]) . '" class="btn btn-secondary">◀️ Yesterday</a>'
-                    . '<input type="text" class="btn btn-light disabled" value="' . $currentDate . '" readonly>'
+                    . '<input type="text" id="datepicker" class="btn btn-light disabled" value="' . $currentDate . '" readonly>'
                     . '<a href="' . new moodle_url($PAGE->url, ['id' => $id, 'view' => $view, 'date' => $nextDay]) . '" class="btn btn-secondary">Tomorrow ▶️</a>'
                     . '</div>'
                     . '</div>';
