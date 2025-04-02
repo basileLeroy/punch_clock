@@ -57,7 +57,7 @@ class sessions_overview
         foreach ($sessions as $session) {
             $prepared = [
                 'unix_date' => $session->date,
-                'date' => userdate($session->date, '%b %e, %Y'),
+                'date' => userdate($session->date, '%A, %b %e, %Y'),
                 'view_link' => new moodle_url('/mod/punchclock/view.php', [
                     'id' => $this->cmid,
                     'date' => $session->date
@@ -82,8 +82,6 @@ class sessions_overview
      */
     public function render()
     {
-        global $OUTPUT;
-
         $tableactions = new table_actions();
 
         $html = '<table class="table table-striped table-hover">';

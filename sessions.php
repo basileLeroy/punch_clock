@@ -8,10 +8,8 @@
  */
 
 require_once("../../config.php");
-require_once($CFG->dirroot.'/mod/punchclock/classes/forms/filterform.php');
 require_once($CFG->dirroot.'/mod/punchclock/classes/enums/filtercontrols.php');
 
-use mod_punchclock\forms\filterform;
 use mod_punchclock\forms\edittables;
 use mod_punchclock\utils\date_utils;
 use mod_punchclock\enums\filter_controls;
@@ -43,19 +41,8 @@ $PAGE->requires->js_call_amd('mod_punchclock/datepicker', 'init');
 
 // Initialize forms
 $pageparams = ['id' => $id, 'view' => $view, 'date' => $date];
-$filterform = new filterform(null, $pageparams);
 $tableform = new edittables(null, $pageparams);
 
-// Process filter form submission
-if ($filterform->is_submitted() && $filterform->is_validated()) {
-    $data = $filterform->get_data();
-
-    redirect(new moodle_url('/mod/punchclock/sessions.php', [
-        'id' => $id,
-        'view' => $view,
-        'date' => $data->date ?? 0 // Using the timestamp directly
-    ]));
-}
 
 // Process table form submission
 if ($tableform->is_submitted() && $tableform->is_validated()) {
@@ -86,7 +73,6 @@ $tableform->set_table_html($table->render());
 
 // Prepare filter controls
 $filtercontrols = [
-    "calendar" => $filterform->render(),
     "buttons" => (new time_range_selector($id, $view))->get(),
 ];
 

@@ -37,7 +37,6 @@ class edittables extends moodleform
 
     public function definition() {
         $mform = $this->_form;
-        $customdata = $this->_customdata;
 
         $mform->setAttributes(["class" => "bulkeditform"]);
 
