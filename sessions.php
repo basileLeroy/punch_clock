@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Exports view page.
+ * Sessions management page for PunchClock module.
  *
  * @package    mod_punchclock
  * @copyright  2025 onwards Basile Leroy {@link https://basileleroy.com}
@@ -9,59 +8,67 @@
  */
 
 require_once("../../config.php");
-require_once($CFG->dirroot . '/mod/punchclock/classes/forms/filterform.php');
-require_once($CFG->dirroot . '/mod/punchclock/classes/enums/filtercontrols.php');
+require_once($CFG->dirroot.'/mod/punchclock/classes/forms/filterform.php');
+require_once($CFG->dirroot.'/mod/punchclock/classes/enums/filtercontrols.php');
 
 use mod_punchclock\forms\filterform;
+use mod_punchclock\forms\edittables;
 use mod_punchclock\utils\date_utils;
 use mod_punchclock\enums\filter_controls;
 use mod_punchclock\output\sessions_overview;
 use mod_punchclock\output\time_range_selector;
 
-$id         = required_param('id', PARAM_INT);
-$view       = optional_param('view', filter_controls::WEEK, PARAM_INT);
-$cm         = get_coursemodule_from_id('punchclock', $id, 0, false, MUST_EXIST);
-$course     = get_course($cm->course);
-$context    = context_module::instance($cm->id);
+// Get and validate parameters
+$id = required_param('id', PARAM_INT);
+$date = required_param('date', PARAM_INT);
+$view = optional_param('view', filter_controls::WEEK, PARAM_INT);
 
+// Get course module and context
+$cm = get_coursemodule_from_id('punchclock', $id, 0, false, MUST_EXIST);
+$course = get_course($cm->course);
+$context = context_module::instance($cm->id);
+
+// Require login and capabilities
 require_login($course, true, $cm);
 require_capability('mod/punchclock:manage', $context);
 
-$PAGE->set_url('/mod/punchclock/sessions.php', ['id' => $id]);
+// Set up page
+$PAGE->set_url('/mod/punchclock/sessions.php', ['id' => $id, 'date' => time()]);
 $PAGE->set_title(get_string('modulename', 'mod_punchclock'));
-$PAGE->set_heading('Sessions');
+$PAGE->set_heading(get_string('sessions', 'mod_punchclock'));
 $PAGE->set_context($context);
+$PAGE->requires->css('/mod/punchclock/style.css');
+$PAGE->requires->js_call_amd('mod_punchclock/datepicker', 'init');
 
-$filtercontrols = [];
 
-$buttons = new time_range_selector($id, $view);
-$mform = new filterform(null, ['id' => $id, 'view' => $view, 'date' => $date ?? null]);
+// Initialize forms
+$pageparams = ['id' => $id, 'view' => $view, 'date' => $date];
+$filterform = new filterform(null, $pageparams);
+$tableform = new edittables(null, $pageparams);
 
-$filtercontrols = [
-    "calendar" => $mform->render(),
-    "buttons" => $buttons->get(),
-];
+// Process filter form submission
+if ($filterform->is_submitted() && $filterform->is_validated()) {
+    $data = $filterform->get_data();
 
-if ($mform->is_submitted() && $mform->is_validated()) {
-    $data = $mform->get_data();
-    if ($data) {
-        $date = $data->date ?? null;
-        redirect(new moodle_url('/mod/punchclock/sessions.php', [
-            'id' => $id,
-            'view' => $view,
-            'date' => $date
-        ]));
-    }
+    redirect(new moodle_url('/mod/punchclock/sessions.php', [
+        'id' => $id,
+        'view' => $view,
+        'date' => $data->date ?? 0 // Using the timestamp directly
+    ]));
 }
 
-$date = optional_param('date', null, PARAM_TEXT);
+// Process table form submission
+if ($tableform->is_submitted() && $tableform->is_validated()) {
+    $tabledata = $tableform->get_data();
+    // Process your table form data here
+    // Temporary debug output:
+    debugging('Form data: '.var_export($tabledata, true), DEBUG_DEVELOPER);
+}
 
-$date_range = date_utils::get_date_range($view, $date ?? null);
-
+// Get date range and sessions
+$date_range = date_utils::get_date_range($view, $date);
 $sessions = $DB->get_records_sql("
-    SELECT 
-        date,
-        COUNT(id) as session_count
+    SELECT date, COUNT(id) as session_count
     FROM {punchclock_sessions}
     WHERE punchclock_id = :punchclock_id
     AND date BETWEEN :startdate AND :enddate
@@ -73,10 +80,19 @@ $sessions = $DB->get_records_sql("
     'enddate' => $date_range["end"]
 ]);
 
+// Prepare table output
 $table = new sessions_overview(['sessions' => $sessions], $cm->instance);
+$tableform->set_table_html($table->render());
 
+// Prepare filter controls
+$filtercontrols = [
+    "calendar" => $filterform->render(),
+    "buttons" => (new time_range_selector($id, $view))->get(),
+];
+
+// Output page
 echo $OUTPUT->header();
-echo "<h3>Handle your sessions</h3>";
+echo $OUTPUT->heading(get_string('manage_sessions', 'mod_punchclock'));
 echo $OUTPUT->render_from_template('mod_punchclock/components/filterbar', $filtercontrols);
-echo $table->render();
+$tableform->display();
 echo $OUTPUT->footer();
