@@ -1,0 +1,13 @@
+.col-form-label {
+    display: none !important;
+}
+
+.bulkeditform .fitem {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.bulkeditform .fitem .felement .form-control-static {
+    width: 100% !important;
+}
+
