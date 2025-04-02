@@ -22,9 +22,46 @@
     {
     }
 }}
-<div class="datepicker-container">
-    <input type="text" id="datepicker" class="date-input btn btn-light disabled" value="{{$textContent}}" readonly>
-    <div>
-    
+    <div class="datepicker-container">
+        <button class="date-input">{{date}}</button>
+        <div class="datepicker" hidden>
+            <div class="datepicker-header">
+                <button class="prev">Prev</button>
+                <div class="">
+                    <select class="month-input">
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
+                    </select>
+                    <input type="number" class="year-input" value="2025" />
+                </div>
+                <button class="next">Next</button>
+            </div>
+
+            <div class="days">
+                <span class="days">Sun</span>
+                <span class="days">Mon</span>
+                <span class="days">Tue</span>
+                <span class="days">Wed</span>
+                <span class="days">Thu</span>
+                <span class="days">Fri</span>
+                <span class="days">Sat</span>
+            </div>
+
+            <div class="dates"></div>
+
+            <div class="datepicker-footer">
+                <button class="cancel">Cancel</button>
+                <button class="apply">Apply</button>
+            </div>
+        </div>
     </div>
-</div>
