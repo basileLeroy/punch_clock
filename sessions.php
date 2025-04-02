@@ -18,11 +18,8 @@ use mod_punchclock\enums\filter_controls;
 use mod_punchclock\output\sessions_overview;
 use mod_punchclock\output\time_range_selector;
 
-
 $id         = required_param('id', PARAM_INT);
 $view       = optional_param('view', filter_controls::WEEK, PARAM_INT);
-$date_param = optional_param('date', 0, PARAM_INT);
-$date       = ($date_param > 0) ? $date_param : null;
 $cm         = get_coursemodule_from_id('punchclock', $id, 0, false, MUST_EXIST);
 $course     = get_course($cm->course);
 $context    = context_module::instance($cm->id);
@@ -45,37 +42,10 @@ $filtercontrols = [
     "buttons" => $buttons->get(),
 ];
 
-$date_range = date_utils::get_date_range($view, $date ?? null);
-
-$sessions = $DB->get_records_sql("
-    SELECT 
-        FROM_UNIXTIME(date, '%Y-%m-%d') as date_str,
-        date,
-        COUNT(id) as session_count
-    FROM {punchclock_sessions}
-    WHERE course_id = :course_id
-    AND date BETWEEN :startdate AND :enddate
-    GROUP BY date_str
-    ORDER BY date_str ASC
-", [
-    'course_id' => $cm->instance, // Match column name exactly
-    'startdate' => strtotime($date_range['start']), // Convert to timestamp
-    'enddate' => strtotime($date_range['end']) // Convert to timestamp
-]);
-
-// echo "<h3>Database Sessions:";
-// echo "<br>";
-// echo "<pre>";
-// print_r($sessions);
-// echo "</pre>";
-// die();
-
-$table = new sessions_overview(['sessions' => $sessions], $cm->instance);
-
 if ($mform->is_submitted() && $mform->is_validated()) {
     $data = $mform->get_data();
     if ($data) {
-        $date = $data->calendarform['date'] ?? null;
+        $date = $data->date ?? null;
         redirect(new moodle_url('/mod/punchclock/sessions.php', [
             'id' => $id,
             'view' => $view,
@@ -83,6 +53,27 @@ if ($mform->is_submitted() && $mform->is_validated()) {
         ]));
     }
 }
+
+$date = optional_param('date', null, PARAM_TEXT);
+
+$date_range = date_utils::get_date_range($view, $date ?? null);
+
+$sessions = $DB->get_records_sql("
+    SELECT 
+        date,
+        COUNT(id) as session_count
+    FROM {punchclock_sessions}
+    WHERE punchclock_id = :punchclock_id
+    AND date BETWEEN :startdate AND :enddate
+    GROUP BY date
+    ORDER BY date ASC
+", [
+    'punchclock_id' => $cm->instance,
+    'startdate' => $date_range["start"],
+    'enddate' => $date_range["end"]
+]);
+
+$table = new sessions_overview(['sessions' => $sessions], $cm->instance);
 
 echo $OUTPUT->header();
 echo "<h3>Handle your sessions</h3>";
