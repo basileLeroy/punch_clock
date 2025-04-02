@@ -20,9 +20,14 @@ class filterform extends moodleform
     public function __construct($actionurl = null, $customdata = null)
     {
         if (!$actionurl) {
+            if (empty($customdata['id'])) {
+                throw new moodle_exception('missingid', 'mod_punchclock');
+            }
+            
             $actionurl = new moodle_url('/mod/punchclock/sessions.php', [
-                'id' => $customdata['id'] ?? 0,
-                'view' => $customdata['view'] ?? 0
+                'id' => $customdata['id'],
+                'view' => $customdata['view'] ?? null,
+                'date' => $customdata['date'] ?? null
             ]);
         }
         parent::__construct($actionurl, $customdata);
@@ -31,12 +36,7 @@ class filterform extends moodleform
     public function definition()
     {
         $mform = $this->_form;
-
-        $mform->addGroup(
-            [
-                $mform->createElement('date_selector', 'date', '', ['style' => 'width: auto; display: inline-block;']),
-                $mform->createElement('submit', 'submitbutton', get_string('filter', 'mod_punchclock'), ['class' => 'btn btn-primary']),
-            ], 'calendarform', '', [' '], false
-        );
+        $mform->createElement('date_selector', 'date', '', ['style' => 'width: auto; display: inline-block;']);
+        $mform->createElement('submit', 'submitbutton', get_string('filter', 'mod_punchclock'), ['class' => 'btn btn-primary']);
     }
 }
