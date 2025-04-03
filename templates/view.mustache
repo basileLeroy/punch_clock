@@ -34,8 +34,8 @@
 		<div class="row">
 			<div class="col-md-3">
 				<div class="text-center position-relative">
-					<button id="punchclock-button" data-punchclockid="{{punchclockid}}" data-courseid="{{courseid}}" class="step-icon mx-auto bg-primary border rounded-circle d-flex align-items-center justify-content-center position-relative" style="width:120px;height:120px;" data-deadline="{{deadline}}">
-            <p class="text-white h3 m-0 p-0">{{checkin_a}}</p>
+					<button id="punchclock-button morning-start" data-courseid="{{courseid}}" data-type="morning-start" class="step-icon mx-auto bg-primary border rounded-circle d-flex align-items-center justify-content-center position-relative" style="width:120px;height:120px;" >
+            <p id="clock-morning-start" class="text-white h3 m-0 p-0"></p>
 					</button>
 					<h4 class="mt-3 fs-5">Morning</h4>
 					<p id="punchclock-message"></p>
@@ -48,7 +48,7 @@
 			<div class="col-md-3">
 				<div class="text-center position-relative">
 					<button class="step-icon position-relative mx-auto bg-warning border rounded-circle d-flex align-items-center justify-content-center" style="width: 120px;height: 120px;">
-            <p class="text-white h3 m-0 p-0">{{checkout_a}}</p>
+            <p class="text-white h3 m-0 p-0">--:--</p>
 					</button>
           <h4 class="mt-3 fs-5">Lunch</h4>
 					<div class="arrow-icon d-none d-lg-block position-absolute" style="top:50px; right:-25px">
@@ -59,10 +59,11 @@
 			</div>
 			<div class="col-md-3">
 				<div class="text-center position-relative">
-					<button class="step-icon position-relative mx-auto bg-secondary border rounded-circle d-flex align-items-center justify-content-center" style="width: 120px;height: 120px;">
-            <p class="text-white h3 m-0 p-0">{{checkin_b}}</p>
+					<button id="punchclock-button afternoon-start" data-courseid="{{courseid}}" data-type="afternoon-start" class="step-icon position-relative mx-auto bg-secondary border rounded-circle d-flex align-items-center justify-content-center" style="width: 120px;height: 120px;">
+            <p id="clock-afternoon-start" class="text-white h3 m-0 p-0">--:--</p>
 					</button>
           <h4 class="mt-3 fs-5">Afternoon</h4>
+					<p id="punchclock-message-afternoon"></p>
 					<div class="arrow-icon d-none d-lg-block position-absolute" style="top:50px; right:-25px">
 						<svg class="bi bi-arrow-right" fill="currentColor" height="30" viewbox="0 0 16 16" width="30" xmlns="http://www.w3.org/2000/svg">
 						<path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" fill-rule="evenodd"></path></svg>
@@ -72,7 +73,7 @@
 			<div class="col-md-3">
 				<div class="text-center position-relative">
 					<button class="step-icon position-relative mx-auto bg-secondary border rounded-circle d-flex align-items-center justify-content-center" style="width: 120px;height: 120px;">
-            <p class="text-white h3 m-0 p-0">{{checkout_b}}</p>
+            <p class="text-white h3 m-0 p-0">--:--</p>
 					</button>
           <h4 class="mt-3 fs-5">End of Day</h4>
 				</div>

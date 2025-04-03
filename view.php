@@ -20,6 +20,8 @@ $PAGE->set_url('/mod/punchclock/view.php', ['id' => $id]);
 $PAGE->set_title(get_string('modulename', 'mod_punchclock'));
 $PAGE->set_heading(format_string($cm->name));
 $PAGE->requires->css('/mod/punchclock/styles/styles.css');
+$PAGE->requires->js_call_amd('mod_punchclock/punchclock', 'init');
+
 
 
 // LOGIC
@@ -42,22 +44,14 @@ function display_teacher_interface ($OUTPUT) {
 }
 
 function display_student_interface($OUTPUT) {
-    global $USER, $COURSE, $DB;
-
-    $id = required_param('id', PARAM_INT);
-    $cm = get_coursemodule_from_id('punchclock', $id);
-    $context = context_module::instance($cm->id);
-
-    require_login($COURSE, false, $cm);
+    global $USER, $COURSE;
 
     date_default_timezone_set('Europe/Brussels');
 
     $now = time();
-    $today = strtotime('today 09:00:00');
-    $deadline = ($now > $today) ? strtotime('tomorrow 09:00:00') : $today;
+    $morning_deadline = strtotime('09:00:00');
+    $afternoon_deadline = strtotime('13:30:00');
 
-    $allowed_start = $deadline - (15 * 60); // 15 minutes avant
-    $allowed_end = $deadline + (2 * 3600);  // 2 heures après
 
     $currentTime = date("H:i");
     if (strtotime($currentTime) < strtotime("12:30")) {
@@ -72,47 +66,11 @@ function display_student_interface($OUTPUT) {
         'currentDate' => userdate($now, '%A, %d %B %Y'),
         'currentHours' => $currentTime,
         'greetingMessage' => $greeting,
-        'deadline' => $deadline * 1000, // format JS
-        'allowed_start' => $allowed_start * 1000,
-        'allowed_end' => $allowed_end * 1000,
+        'morning_deadline' => $morning_deadline * 1000,
+        'afternoon_deadline' => $afternoon_deadline * 1000,
         'userid' => $USER->id,
         'courseid' => $COURSE->id,
-        'punchclockid' => $cm->instance
     ];
-
-    $today = strtotime('today');
-    $session = $DB->get_record('punchclock_sessions', [
-        'user_id' => $USER->id,
-        'course_id' => $COURSE->id,
-        'punchclock_id' => $cm->instance,
-        'date' => $today
-    ]);
-
-    $checkin_a = '--:--';
-    $checkout_a = '--:--';
-    $checkin_b = '--:--';
-    $checkout_b = '--:--';
-
-    if ($session) {
-        if (!empty($session->checkin_a)) {
-            $checkin_a = date('H:i', $session->checkin_a);
-        }
-        if (!empty($session->checkout_a)) {
-            $checkout_a = date('H:i', $session->checkout_a);
-        }
-        if (!empty($session->checkin_b)) {
-            $checkin_b = date('H:i', $session->checkin_b);
-        }
-        if (!empty($session->checkout_b)) {
-            $checkout_b = date('H:i', $session->checkout_b);
-        }
-    }
-
-    // Ajouter au contexte
-    $templatecontext->checkin_a = $checkin_a;
-    $templatecontext->checkout_a = $checkout_a;
-    $templatecontext->checkin_b = $checkin_b;
-    $templatecontext->checkout_b = $checkout_b;
 
     return $OUTPUT->render_from_template('mod_punchclock/view', $templatecontext);
 }
