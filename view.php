@@ -14,9 +14,12 @@ require_once('lib.php');
 $id = required_param('id', PARAM_INT);
 $cm = get_coursemodule_from_id('punchclock', $id);
 $context = context_module::instance($cm->id);
+$punchclock = $DB->get_record('punchclock', ['id' => $cm->instance]);
 require_login($cm->course, true, $cm);
 
 $PAGE->set_url('/mod/punchclock/view.php', ['id' => $id]);
+$PAGE->set_context(context_module::instance($cm->id));
+$PAGE->set_cm($cm);
 $PAGE->set_title(get_string('modulename', 'mod_punchclock'));
 $PAGE->set_heading(format_string($cm->name));
 $PAGE->requires->css('/mod/punchclock/styles/styles.css');
@@ -60,8 +63,7 @@ function display_student_interface($OUTPUT) {
     date_default_timezone_set('Europe/Brussels');
 
     $now = time();
-    $morning_deadline = strtotime('09:00:00');
-    $afternoon_deadline = strtotime('13:30:00');
+
 
 
     $currentTime = date("H:i");
@@ -73,14 +75,12 @@ function display_student_interface($OUTPUT) {
         $greeting = "Good Evening";
     }
 
-    $templatecontext = (object)[
+    $templatecontext = [
         'currentDate' => userdate($now, '%A, %d %B %Y'),
         'currentHours' => $currentTime,
         'greetingMessage' => $greeting,
-        'morning_deadline' => $morning_deadline * 1000,
-        'afternoon_deadline' => $afternoon_deadline * 1000,
-        'userid' => $USER->id,
         'courseid' => $COURSE->id,
+        'punchclockid' => $cm->instance, // ou autre selon ta logique
     ];
 
     return $OUTPUT->render_from_template('mod_punchclock/view', $templatecontext);
