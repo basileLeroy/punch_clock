@@ -26,13 +26,24 @@ $PAGE->requires->js_call_amd('mod_punchclock/punchclock', 'init');
 
 // LOGIC
 
+function create_nav_button(string $text, string $path, array $params) {
+    
+    return [
+        'text' => get_string($text, 'mod_punchclock'),
+        'url' => (new moodle_url($path, $params))->out(false),
+        'class' => 'btn btn-outline-primary mx-3'
+    ];
+}
+
+
 function display_teacher_interface ($OUTPUT) {
     $id = required_param('id', PARAM_INT);
+    $date = time();
 
     $buttons = [
-        ['text' => 'Sessions', 'url' => new moodle_url('/mod/punchclock/sessions.php', ['id' => $id]), 'class' => 'btn btn-outline-primary mx-3'],
-        ['text' => 'Absences', 'url' => new moodle_url('/mod/punchclock/absences.php', ['id' => $id]), 'class' => 'btn btn-outline-primary mx-3'],
-        ['text' => 'Exports', 'url' => new moodle_url('/mod/punchclock/exports.php', ['id' => $id]), 'class' => 'btn btn-outline-primary mx-3'],
+        create_nav_button('sessions', '/mod/punchclock/sessions.php', ['id' => $id, 'date' => time()]),
+        create_nav_button('absences', '/mod/punchclock/absences.php', ['id' => $id]),
+        create_nav_button('exports', '/mod/punchclock/exports.php', ['id' => $id])
     ];
 
     $context = (object)[

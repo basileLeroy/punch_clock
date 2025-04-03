@@ -30,17 +30,28 @@ class time_range_selector {
         global $PAGE;
         $this->id = $id;
         $this->view = $view;
-
+    
+        // Fetch the 'date' parameter from the page URL if it exists
+        $date = optional_param('date', null, PARAM_INT);
+    
         foreach (filter_controls::all() as $view => $text) {
             $is_active = ($view == $this->view);
+    
+            // Build URL parameters
+            $params = ['id' => $this->id, 'view' => $view];
+            if ($date !== null) {
+                $params['date'] = $date;
+            }
+    
             $this->buttons[] = [
                 'text' => $text,
-                'url' => format_string(new moodle_url($PAGE->url, ['id' => $this->id, 'view' => $view])),
+                'url' => format_string(new moodle_url($PAGE->url, $params)),
                 'class' => $is_active ? 'mx-1' : 'btn btn-outline-primary mx-1',
                 'active' => $is_active
             ];
         }
     }
+    
 
     /**
      * Returns the full list of time range options

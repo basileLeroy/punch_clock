@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Punch Clock time range selector options.
  *
@@ -11,20 +12,28 @@ namespace mod_punchclock\output;
 
 defined('MOODLE_INTERNAL') || die();
 
+use mod_punchclock\output\table_actions;
+use moodle_url;
+
 /**
  * Class sessions_overview
  * Generates a table of session records.
  */
-class sessions_overview {
+class sessions_overview
+{
     private $sessions;
+    private $cmid;
 
     /**
      * Constructor
      *
-     * @param array $sessions An array of session data
+     * @param array $data An array of session data
+     * @param int $cmid Course module ID
      */
-    public function __construct(array $sessions) {
-        $this->sessions = $sessions;
+    public function __construct(array $data, int $cmid)
+    {
+        $this->cmid = $cmid;
+        $this->prepare_sessions($data["sessions"]);
     }
 
     /**
@@ -32,8 +41,38 @@ class sessions_overview {
      *
      * @param array $sessions New session data.
      */
-    public function update(array $sessions) {
-        $this->sessions = $sessions;
+    public function update(array $sessions)
+    {
+        $this->prepare_sessions($sessions);
+    }
+
+    /**
+     * Prepares session data with action links
+     *
+     * @param array $sessions Raw session data
+     */
+    private function prepare_sessions(array $sessions)
+    {
+        $this->sessions = [];
+        foreach ($sessions as $session) {
+            $prepared = [
+                'unix_date' => $session->date,
+                'date' => userdate($session->date, '%A, %b %e, %Y'),
+                'view_link' => new moodle_url('/mod/punchclock/view.php', [
+                    'id' => $this->cmid,
+                    'date' => $session->date
+                ]),
+                'update_link' => new moodle_url('/mod/punchclock/edit.php', [
+                    'id' => $this->cmid,
+                    'date' => $session->date
+                ]),
+                'delete_link' => new moodle_url('/mod/punchclock/delete.php', [
+                    'id' => $this->cmid,
+                    'date' => $session->date
+                ])
+            ];
+            $this->sessions[] = $prepared;
+        }
     }
 
     /**
@@ -41,12 +80,15 @@ class sessions_overview {
      *
      * @return string HTML output of the table
      */
-    public function render() {
-        global $OUTPUT;
+    public function render()
+    {
+        $tableactions = new table_actions();
 
         $html = '<table class="table table-striped table-hover">';
+        $html .= $tableactions->render();
         $html .= '<thead class="text-center">';
         $html .= '<tr>';
+        $html .= '<th class="text-center"><input type="checkbox" class="selectallrows" /></th>';
         $html .= '<th style="width: 33%;" class="text-center">Date</th>';
         $html .= '<th class="text-center">View</th>';
         $html .= '<th class="text-center">Update</th>';
@@ -62,10 +104,11 @@ class sessions_overview {
             // Render session rows
             foreach ($this->sessions as $row) {
                 $html .= '<tr>';
-                $html .= '<td style="width: 33%;">' . htmlspecialchars($row['date']) . '</td>';
-                $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['view_link']) . '" class="btn btn-link">View</a></td>';
-                $html .= '<td class="text-center"><a href="#" class="btn btn-sm btn-primary">Edit</a></td>';
-                $html .= '<td class="text-center"><a href="#" class="btn btn-sm btn-danger">Delete</a></td>';
+                $html .= '<td class="text-center"><input class="selectrow" name="dates[]" value="' . $row['unix_date'] . '" type="checkbox" /></td>';
+                $html .= '<td class="text-center" style="width: 33%;">' . htmlspecialchars($row['date']) . '</td>';
+                $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['view_link']) . '" class="btn btn-link">See page</a></td>';
+                $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['update_link']) . '" class="btn btn-sm btn-primary">Edit</a></td>';
+                $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['delete_link']) . '" class="btn btn-sm btn-danger">Delete</a></td>';
                 $html .= '</tr>';
             }
         }
