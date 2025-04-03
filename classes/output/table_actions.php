@@ -97,9 +97,9 @@ class table_actions
 
     private function bulkaction_block ()
     {
-        return '<div class="">'
-            . '<button type="submit" name="submit" value="bulkedit" class=" m-2 btn btn-outline-primary btn-sm">Edit selected (0)</button>'
-            . '<button type="submit" name="submit" value="bulkdelete" class=" m-2 btn btn-danger btn-sm">Delete selected (0)</button>'
+        return '<div class="bulkactions">'
+            . '<button type="submit" name="submit" value="bulkedit" class="bulkeditbtn m-2 btn btn-outline-primary btn-sm">Edit selected (0)</button>'
+            . '<button type="submit" name="submit" value="bulkdelete" class="bulkdeletebtn m-2 btn btn-danger btn-sm">Delete selected (0)</button>'
             . '</div>';
     }
 

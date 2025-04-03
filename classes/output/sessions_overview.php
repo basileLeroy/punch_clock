@@ -88,7 +88,7 @@ class sessions_overview
         $html .= $tableactions->render();
         $html .= '<thead class="text-center">';
         $html .= '<tr>';
-        $html .= '<th class="text-center"><input type="checkbox" /></th>';
+        $html .= '<th class="text-center"><input type="checkbox" class="selectallrows" /></th>';
         $html .= '<th style="width: 33%;" class="text-center">Date</th>';
         $html .= '<th class="text-center">View</th>';
         $html .= '<th class="text-center">Update</th>';
@@ -104,7 +104,7 @@ class sessions_overview
             // Render session rows
             foreach ($this->sessions as $row) {
                 $html .= '<tr>';
-                $html .= '<td class="text-center"><input name="dates[]" value="' . $row['unix_date'] . '" type="checkbox" /></td>';
+                $html .= '<td class="text-center"><input class="selectrow" name="dates[]" value="' . $row['unix_date'] . '" type="checkbox" /></td>';
                 $html .= '<td class="text-center" style="width: 33%;">' . htmlspecialchars($row['date']) . '</td>';
                 $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['view_link']) . '" class="btn btn-link">See page</a></td>';
                 $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['update_link']) . '" class="btn btn-sm btn-primary">Edit</a></td>';
