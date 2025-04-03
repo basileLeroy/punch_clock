@@ -19,7 +19,7 @@ use moodle_exception;
 
 class edittables extends moodleform
 {
-    public function __construct($actionurl = null, $customdata)
+    public function __construct($actionurl = null, $customdata = null)
     {
         if (!$actionurl) {
             if (empty($customdata['id'])) {
