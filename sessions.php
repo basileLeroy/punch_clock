@@ -45,12 +45,15 @@ $pageparams = ['id' => $id, 'view' => $view, 'date' => $date];
 $tableform = new edittables(null, $pageparams);
 
 
-// Process table form submission
-if ($tableform->is_submitted() && $tableform->is_validated()) {
-    $tabledata = $tableform->get_data();
-    // Process your table form data here
-    // Temporary debug output:
-    debugging('Form data: '.var_export($tabledata, true), DEBUG_DEVELOPER);
+$submitaction = optional_param('submit', '', PARAM_ALPHA);
+$dates = optional_param_array('dates', [], PARAM_INT);
+
+
+
+if ($submitaction === 'bulkedit') {
+    redirect(new moodle_url('/mod/punchclock/bulkedit.php', ['id' => $id]));
+} elseif ($submitaction === 'bulkdelete') {
+    redirect(new moodle_url('/mod/punchclock/bulkdelete.php', ['id' => $id]));
 }
 
 // Get date range and sessions
