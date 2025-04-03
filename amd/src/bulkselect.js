@@ -32,6 +32,10 @@ const updateBtnCount = () => {
     const selectedCount = document.querySelectorAll(".selectrow:checked").length;
     bulkEditBtn.textContent = `Edit Selected (${selectedCount})`;
     bulkDeleteBtn.textContent = `Delete Selected (${selectedCount})`;
+
+    const isDisabled = selectedCount === 0;
+    bulkEditBtn.disabled = isDisabled;
+    bulkDeleteBtn.disabled = isDisabled;
 };
 
 define([], function() {
