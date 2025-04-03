@@ -41,15 +41,24 @@ define([], function() {
                 return;
             }
 
+            /**
+             * Event listener for the "Select All" checkbox.
+             * When clicked, it toggles all individual row checkboxes and updates the button count.
+             */
             selectAll.addEventListener("click", () => {
                 toggleAllCheckboxes();
                 updateBtnCount();
             });
 
+            /**
+             * Event listener for each row checkbox.
+             * When clicked, it updates the bulk action button counts.
+             */
             listOfRows.forEach(checkbox => {
                 checkbox.addEventListener("click", updateBtnCount);
             });
 
+            // Initialize button count on page load
             updateBtnCount();
         }
     };

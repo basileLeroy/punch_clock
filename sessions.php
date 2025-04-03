@@ -37,6 +37,7 @@ $PAGE->set_heading(get_string('sessions', 'mod_punchclock'));
 $PAGE->set_context($context);
 $PAGE->requires->css('/mod/punchclock/style.css');
 $PAGE->requires->js_call_amd('mod_punchclock/datepicker', 'init');
+$PAGE->requires->js_call_amd('mod_punchclock/bulkselect', 'init');
 
 
 // Initialize forms
