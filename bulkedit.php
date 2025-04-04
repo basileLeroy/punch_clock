@@ -8,6 +8,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_punchclock\forms\bulkeditform;
+
 require_once('../../config.php');
 
 $id = required_param('id', PARAM_INT);
@@ -25,10 +27,19 @@ $PAGE->set_title(get_string('modulename', 'mod_punchclock'));
 $PAGE->set_heading('Edit Sessions');
 $PAGE->set_context($context);
 
-echo $OUTPUT->header();
-echo "<h3>Edit Sessions</h3>";
-echo "<pre>";
-var_dump($dates);
-echo "</pre>";
-// Your session management logic here
-echo $OUTPUT->footer();
+$actionurl = new moodle_url('/mod/punchclock/bulkedit.php', ['id' => $id]);
+$mform = new bulkeditform($actionurl);
+$mform->set_data(['id' => $id]);
+
+if ($mform->is_cancelled()) {
+    redirect(new moodle_url('/mod/punchclock/view.php', ['id' => $id]));
+} else if ($data = $mform->get_data()) {
+    echo "Hello";
+    print_object($data); // or use the data for updates
+    die();
+} else {
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading(get_string('bulkedit', 'mod_punchclock'));
+    $mform->display();
+    echo $OUTPUT->footer();
+}
