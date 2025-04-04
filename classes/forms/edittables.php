@@ -1,6 +1,6 @@
 <?php
 /**
- * Punch Clock table form for bulk edits.
+ * Punch Clock form around sessions table to update selected sessions.
  *
  * @package    mod_punchclock
  * @copyright  2025 onwards Basile Leroy {@link https://basileleroy.com}
@@ -19,7 +19,7 @@ use moodle_exception;
 
 class edittables extends moodleform
 {
-    public function __construct($actionurl = null, $customdata)
+    public function __construct($actionurl = null, $customdata = null)
     {
         if (!$actionurl) {
             if (empty($customdata['id'])) {
@@ -27,9 +27,7 @@ class edittables extends moodleform
             }
             
             $actionurl = new moodle_url('/mod/punchclock/sessions.php', [
-                'id' => $customdata['id'],
-                'view' => $customdata['view'] ?? null,
-                'date' => $customdata['date'] ?? null
+                'id' => $customdata['id']
             ]);
         }
         parent::__construct($actionurl, $customdata);
@@ -38,7 +36,7 @@ class edittables extends moodleform
     public function definition() {
         $mform = $this->_form;
 
-        $mform->setAttributes(["class" => "bulkeditform"]);
+        $mform->setAttributes(["class" => "bulkselectsessions"]);
 
         $mform->addElement('static', 'sessions_table', '', '');  // Placeholder for table
     }
