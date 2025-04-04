@@ -57,6 +57,17 @@ define([], function() {
 
             updateButtonVisibility(addTimeBlockCustomButton, timeblockCounter, 2);
             updateButtonVisibility(addHolidayCustomButton, holidaysCounter, 4);
+        },
+        bulk: function() {
+            let addTimeBlockDefaultButton = document.getElementById("id_timeblock_add_fields");
+            let addTimeBlockCustomButton = document.getElementById("add-timeblock-button");
+
+            removeDefaultButtons([addTimeBlockDefaultButton]);
+            redirectCustomButtonToDefaultAction(addTimeBlockCustomButton, addTimeBlockDefaultButton);
+
+            const timeblockCounter = document.querySelector('[name="timeblock_repeats"]');
+
+            updateButtonVisibility(addTimeBlockCustomButton, timeblockCounter, 2);
         }
     };
 });
