@@ -18,7 +18,7 @@ use mod_punchclock\output\time_range_selector;
 
 // Get and validate parameters
 $id = required_param('id', PARAM_INT);
-$date = required_param('date', PARAM_INT);
+$date = optional_param('date','', PARAM_INT);
 $view = optional_param('view', filter_controls::WEEK, PARAM_INT);
 
 // Get course module and context
@@ -39,22 +39,26 @@ $PAGE->requires->css('/mod/punchclock/style.css');
 $PAGE->requires->js_call_amd('mod_punchclock/datepicker', 'init');
 $PAGE->requires->js_call_amd('mod_punchclock/bulkselect', 'init');
 
+$submitaction = optional_param('submit', '', PARAM_ALPHA);
+$dates = optional_param_array('dates', [], PARAM_INT);
+
+$bulkactionparams = ["id" => $id];
+if (!empty($dates)) {
+    foreach ($dates as $datekey => $unixtime) {
+        $bulkactionparams["date[$datekey]"] = $unixtime;
+    }
+}
+
+if ($submitaction === 'bulkedit') {
+    redirect(new moodle_url('/mod/punchclock/bulkedit.php', $bulkactionparams));
+} elseif ($submitaction === 'bulkdelete') {
+    redirect(new moodle_url('/mod/punchclock/bulkdelete.php', $bulkactionparams));
+}
+
 
 // Initialize forms
 $pageparams = ['id' => $id, 'view' => $view, 'date' => $date];
 $tableform = new edittables(null, $pageparams);
-
-
-$submitaction = optional_param('submit', '', PARAM_ALPHA);
-$dates = optional_param_array('dates', [], PARAM_INT);
-
-
-
-if ($submitaction === 'bulkedit') {
-    redirect(new moodle_url('/mod/punchclock/bulkedit.php', ['id' => $id]));
-} elseif ($submitaction === 'bulkdelete') {
-    redirect(new moodle_url('/mod/punchclock/bulkdelete.php', ['id' => $id]));
-}
 
 // Get date range and sessions
 $date_range = date_utils::get_date_range($view, $date);

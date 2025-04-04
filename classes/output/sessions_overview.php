@@ -102,9 +102,9 @@ class sessions_overview
             $html .= '<tr><td colspan="4" class="text-center"><h4>No sessions were found</h4></td></tr>';
         } else {
             // Render session rows
-            foreach ($this->sessions as $row) {
+            foreach ($this->sessions as $key => $row) {
                 $html .= '<tr>';
-                $html .= '<td class="text-center"><input class="selectrow" name="dates[]" value="' . $row['unix_date'] . '" type="checkbox" /></td>';
+                $html .= '<td class="text-center"><input class="selectrow" name="dates[d' . $key . ']" value="' . $row['unix_date'] . '" type="checkbox" /></td>';
                 $html .= '<td class="text-center" style="width: 33%;">' . htmlspecialchars($row['date']) . '</td>';
                 $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['view_link']) . '" class="btn btn-link">See page</a></td>';
                 $html .= '<td class="text-center"><a href="' . htmlspecialchars($row['update_link']) . '" class="btn btn-sm btn-primary">Edit</a></td>';
