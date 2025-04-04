@@ -11,6 +11,8 @@
 require_once('../../config.php');
 
 $id = required_param('id', PARAM_INT);
+$dates = optional_param_array('dates', array(), PARAM_INT);
+
 $cm = get_coursemodule_from_id('punchclock', $id, 0, false, MUST_EXIST);
 $course = get_course($cm->course);
 $context = context_module::instance($cm->id);

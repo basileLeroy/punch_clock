@@ -45,7 +45,7 @@ $dates = optional_param_array('dates', [], PARAM_INT);
 $bulkactionparams = ["id" => $id];
 if (!empty($dates)) {
     foreach ($dates as $datekey => $unixtime) {
-        $bulkactionparams["date[$datekey]"] = $unixtime;
+        $bulkactionparams["dates[$datekey]"] = $unixtime;
     }
 }
 
