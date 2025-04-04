@@ -64,8 +64,6 @@ function display_student_interface($OUTPUT) {
 
     $now = time();
 
-
-
     $currentTime = date("H:i");
     if (strtotime($currentTime) < strtotime("12:30")) {
         $greeting = "Good Morning";
@@ -80,7 +78,7 @@ function display_student_interface($OUTPUT) {
         'currentHours' => $currentTime,
         'greetingMessage' => $greeting,
         'courseid' => $COURSE->id,
-        'punchclockid' => $cm->instance, // ou autre selon ta logique
+        'punchclockid' => $cm->instance,
     ];
 
     return $OUTPUT->render_from_template('mod_punchclock/view', $templatecontext);

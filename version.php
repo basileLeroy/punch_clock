@@ -10,7 +10,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2025030702;
+$plugin->version   = 2025030902;
 $plugin->requires  = 2024100100;
 $plugin->component = 'mod_punchclock';
 $plugin->maturity  = MATURITY_ALPHA; // Or MATURITY_STABLE when ready.

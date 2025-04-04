@@ -2,40 +2,30 @@
 
 namespace mod_punchclock\external;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once("$CFG->libdir/externallib.php");
+
 use external_function_parameters;
-use external_value;
 use external_single_structure;
+use external_value;
 use external_api;
 use stdClass;
 
 /**
- * External API to log a punch clock entry.
+ * External function for logging punch clock data.
  */
 class log_punch extends external_api {
 
-    /**
-     * Define parameters for the web service.
-     *
-     * @return external_function_parameters
-     */
     public static function execute_parameters() {
         return new external_function_parameters([
             'courseid' => new external_value(PARAM_INT, 'Course ID'),
             'punchclockid' => new external_value(PARAM_INT, 'Punchclock instance ID'),
-            'type' => new external_value(PARAM_ALPHA, 'Punch type: morning or afternoon'),
-            'time' => new external_value(PARAM_TEXT, 'Time as string (HH:MM:SS)')
+            'type' => new external_value(PARAM_ALPHA, 'Type: morning or afternoon'),
+            'time' => new external_value(PARAM_TEXT, 'Time as string')
         ]);
     }
 
-    /**
-     * Log the punch in the database.
-     *
-     * @param int $courseid
-     * @param int $punchclockid
-     * @param string $type
-     * @param string $time
-     * @return array
-     */
     public static function execute($courseid, $punchclockid, $type, $time) {
         global $USER, $DB;
 
@@ -50,8 +40,8 @@ class log_punch extends external_api {
         $record->user_id = $USER->id;
         $record->course_id = $courseid;
         $record->punchclock_id = $punchclockid;
-        $record->session_id = 0; // Tu pourras l'utiliser plus tard si besoin
-        $record->level = $type; // 'morning' ou 'afternoon'
+        $record->session_id = 0;
+        $record->level = $type;
         $record->timestamp = time();
         $record->message = "User {$USER->id} punched at {$time} for {$type}";
 
@@ -60,14 +50,9 @@ class log_punch extends external_api {
         return ['status' => 'ok'];
     }
 
-    /**
-     * Define the structure of the return value.
-     *
-     * @return external_single_structure
-     */
     public static function execute_returns() {
         return new external_single_structure([
-            'status' => new external_value(PARAM_TEXT, 'Result status')
+            'status' => new external_value(PARAM_TEXT, 'Success status')
         ]);
     }
 }

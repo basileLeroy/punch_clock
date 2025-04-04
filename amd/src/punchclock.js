@@ -32,7 +32,7 @@ export const init = () => {
 
             const punchedTime = clock.innerText;
             const courseId = button.dataset.courseid;
-            const punchclockId = button.dataset.punchclockid;
+            const punchclockId = parseInt(button.dataset.punchclockid, 10);
 
             // Send AJAX request to log punch time
             Ajax.call([{
