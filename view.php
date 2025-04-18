@@ -28,7 +28,6 @@ $PAGE->requires->js_call_amd('mod_punchclock/punchclock', 'init');
 
 
 // LOGIC
-
 function create_nav_button(string $text, string $path, array $params) {
     
     return [
@@ -57,7 +56,7 @@ function display_teacher_interface ($OUTPUT) {
 
 }
 
-function display_student_interface($OUTPUT) {
+function display_student_interface($OUTPUT, $cm) {
     global $USER, $COURSE;
 
     date_default_timezone_set('Europe/Brussels');
@@ -92,8 +91,7 @@ echo $OUTPUT->header();
 if (has_capability('mod/punchclock:manage', $context)) {
     echo display_teacher_interface($OUTPUT);
 } else {
-
-    echo display_student_interface($OUTPUT);
+    echo display_student_interface($OUTPUT, $cm);
 }
 
 echo $OUTPUT->footer();
